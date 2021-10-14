@@ -8,7 +8,7 @@ Why Exolix? Exolix is a C# framework that allows you to develop API applications
 This example will show how to create animations in the CLI terminal with exolix!
 
 ```cs
-using Axeri.Exolix.Terminal;
+using Exolix.Terminal;
 
 class MainFile 
 {
@@ -18,3 +18,8 @@ class MainFile
 	}
 }
 ```
+
+# Links
+ - [Maintainers](https://axeri.net/staff/developers)
+ - [Maintainers GitHub](https://github.com/axeridev)
+ - [Docs (Coming Soon)](https://github.com/AxeriDev/Exolix/wiki)
