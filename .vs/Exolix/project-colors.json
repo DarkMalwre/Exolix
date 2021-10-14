@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "e53705d3-f6b2-4ad7-8d4d-1d4488c39ff3": {
+      "ProjectGuid": "e53705d3-f6b2-4ad7-8d4d-1d4488c39ff3",
+      "DisplayName": "Exolix",
+      "ColorIndex": 0
+    },
+    "b8a40907-ab79-4dfc-a7ed-d772a7330788": {
+      "ProjectGuid": "b8a40907-ab79-4dfc-a7ed-d772a7330788",
+      "DisplayName": "ExolixTests",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}
