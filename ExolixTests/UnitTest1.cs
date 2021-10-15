@@ -1,5 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Exolix.Terminal;
+using System;
+using Exolix.Developer;
 
 namespace ExolixTests
 {
@@ -9,7 +11,12 @@ namespace ExolixTests
         [TestMethod]
         public void TestMethod1()
         {
-            Logger.Info("Hello, testing a logger");
+            States.SetDebugMode(true);
+
+            Logger.PrintDynamic("----------     ----- Exolic -----     ----------\n");
+            Logger.PrintDynamic("Hey Whats Up\n");
+
+            States.End();
         }
     }
 }
