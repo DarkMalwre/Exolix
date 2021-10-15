@@ -419,6 +419,14 @@
           }
         }
       },
+      "Pastel/2.1.0": {
+        "runtime": {
+          "lib/net5.0/Pastel.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
@@ -1087,6 +1095,7 @@
       },
       "Exolix/1.0.0": {
         "dependencies": {
+          "Pastel": "2.1.0",
           "WebSocketSharp": "1.0.3-rc11"
         },
         "runtime": {
@@ -1198,6 +1207,13 @@
       "sha512": "sha512-c5JVjuVAm4f7E9Vj+v09Z9s2ZsqFDjBpcsyS3M9xRo0bEdm/LVZSzLxxNvfvAwRiiE8nwe1h2G4OwiwlzFKXlA==",
       "path": "nuget.frameworks/5.0.0",
       "hashPath": "nuget.frameworks.5.0.0.nupkg.sha512"
+    },
+    "Pastel/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CYPB5mCTGdmhaW7FyiYerq8S5S6Sz1pBJMC6XmmWvk/APiKjqmCc5vIn4XX++3E1w56LadBUDpicWBc2k84kmQ==",
+      "path": "pastel/2.1.0",
+      "hashPath": "pastel.2.1.0.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",

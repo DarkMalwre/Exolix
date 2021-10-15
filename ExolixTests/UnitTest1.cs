@@ -1,4 +1,6 @@
+﻿using Exolix.Sockets.Server;
 using Exolix.Terminal;
+using Pastel;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -10,16 +12,12 @@ namespace ExolixTests
     {
         public static void Main(string[] args)
         {
-            Logger.PrintDynamic("hey\n");
-            Logger.PrintDynamic("SErver\n");
+            Logger.PrintLine("Exolix".Pastel("#60cdff") + " Scratch Test | Socket Server".Pastel("#ffffff"));
+            Logger.PrintLine("───────────────────────────────────".Pastel("#555555"));
 
-            var server = new WebSocketServer("ws://localhost:8090");
-            server.AddWebSocketService<HandleService>("/");
+            SocketServer server = new SocketServer();
 
-            server.Start();
-            Console.ReadKey(true);
-
-            server.Stop();
+            server.Run();
         }
     }
 

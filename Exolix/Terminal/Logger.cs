@@ -28,5 +28,10 @@ namespace Exolix.Terminal
 
             Console.Write(stdOutRaw);
         }
+
+        public static void PrintLine(string stdOutText)
+        {
+            PrintDynamic(stdOutText + "\n");
+        }
     }
 }
