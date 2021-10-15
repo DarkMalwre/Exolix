@@ -17,6 +17,11 @@ namespace ExolixTests
 
             SocketServer server = new SocketServer();
 
+            server.OnOpen((conn) =>
+            {
+                Logger.PrintLine("[Test] New connection!");
+            });
+
             server.Run();
         }
     }

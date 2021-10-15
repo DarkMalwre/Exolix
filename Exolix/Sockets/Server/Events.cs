@@ -8,8 +8,10 @@ namespace Exolix.Sockets.Server
 {
     public class Events
     {
-        public void OnOpen(Action<ServerConnection> handler) {
+        public List<Action<ServerConnection>> OnOpenEvents = new List<Action<ServerConnection>>();
 
+        public void OnOpen(Action<ServerConnection> handler) {
+            OnOpenEvents.Add(handler);
         }
     }
 }

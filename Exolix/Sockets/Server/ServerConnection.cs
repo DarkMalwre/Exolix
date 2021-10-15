@@ -19,9 +19,16 @@ namespace Exolix.Sockets.Server
 
     public class CoreServerConnection: WebSocketBehavior
     {
+        public SocketServer? Server;
+
         protected override void OnOpen()
         {
             ServerConnection connection = new ServerConnection(this);
+
+            foreach (var eventAction in Server!.OnOpenEvents.ToArray())
+            {
+                eventAction(connection);
+            }
         }
     }
 }
