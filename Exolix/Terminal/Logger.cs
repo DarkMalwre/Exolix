@@ -26,7 +26,7 @@ namespace Exolix.Terminal
                 return;
             }
 
-            Console.Write("Raw: " + stdOutRaw);
+            Console.Write(stdOutRaw);
         }
     }
 }

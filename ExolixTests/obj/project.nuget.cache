@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qDP6KHTb5dvc0yLI+taJEm2pYD9zksTOEBuoSweTOSt8QIGKelfHFzTvb8KW74wIaEmTHcqP8UEr5nkcGpffAw==",
+  "dgSpecHash": "nUrSNxU3JqsZckzCUV3G5hA4TihwbS2MSQgY1UNTzsCLfSOHqvxWY9Ec1txwQQXBs+KoqGtOlVbRkax6VGYbCw==",
   "success": true,
   "projectFilePath": "C:\\Users\\xfaon\\source\\repos\\Exolix\\ExolixTests\\ExolixTests.csproj",
   "expectedPackageFiles": [
@@ -91,7 +91,19 @@
     "C:\\Users\\xfaon\\.nuget\\packages\\system.threading.tasks.extensions\\4.3.0\\system.threading.tasks.extensions.4.3.0.nupkg.sha512",
     "C:\\Users\\xfaon\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\xfaon\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Users\\xfaon\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\xfaon\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\xfaon\\.nuget\\packages\\websocketsharp\\1.0.3-rc11\\websocketsharp.1.0.3-rc11.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'WebSocketSharp 1.0.3-rc11' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "WebSocketSharp",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }
