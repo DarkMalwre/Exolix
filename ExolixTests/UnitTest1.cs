@@ -1,22 +1,15 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Exolix.Terminal;
-using System;
-using Exolix.Developer;
 
 namespace ExolixTests
 {
-    [TestClass]
-    public class UnitTest1
+    public class Tests
     {
-        [TestMethod]
-        public void TestMethod1()
+        public static void Main(string[] args)
         {
-            States.SetDebugMode(true);
+            Logger.PrintDynamic("hey");
 
-            Logger.PrintDynamic("----------     ----- Exolic -----     ----------\n");
-            Logger.PrintDynamic("Hey Whats Up\n");
-
-            States.End();
+            System.Threading.Thread.Sleep(1000);
+            Logger.PrintDynamic("1s Past");
         }
     }
 }

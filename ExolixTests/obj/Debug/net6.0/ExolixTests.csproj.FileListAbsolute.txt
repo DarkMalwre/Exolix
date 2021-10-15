@@ -99,3 +99,4 @@ C:\Users\xfaon\source\repos\Exolix\ExolixTests\obj\Debug\net6.0\ExolixTests.dll
 C:\Users\xfaon\source\repos\Exolix\ExolixTests\obj\Debug\net6.0\ref\ExolixTests.dll
 C:\Users\xfaon\source\repos\Exolix\ExolixTests\obj\Debug\net6.0\ExolixTests.pdb
 C:\Users\xfaon\source\repos\Exolix\ExolixTests\obj\Debug\net6.0\ExolixTests.genruntimeconfig.cache
+C:\Users\xfaon\source\repos\Exolix\ExolixTests\bin\Debug\net6.0\ExolixTests.exe
