@@ -25,6 +25,11 @@ namespace Exolix.Sockets.Server
         {
             get;
         }
+
+        string Data
+        {
+            get;
+        }
     }
 
     public class CoreServerConnection: WebSocketBehavior
@@ -47,12 +52,16 @@ namespace Exolix.Sockets.Server
         {
             try
             {
-                JsonElement parsedMessage = JsonDocument.Parse(messageEvent.Data).RootElement;
+                ConnectionMessage parsedMessage = JsonDocument.Parse(messageEvent.Data);
+                ConnectionMessage! parsedMessageNew = parsedMessage as ConnectionMessage;
 
                 foreach (var eventTuple in Connection!.OnMessageEvents.ToArray())
                 {
-                    Console.WriteLine("[Debug] Message: " + parsedMessage);
-                    eventTuple.Item1(parsedMessage);
+
+                    if (parsedMessageNew != null & parsedMessageNew?.Data != null & parsedMessageNew?.Channel != null)
+                    {
+                        eventTuple.Item1(parsedMessageNew!.Data.ToString());
+                    }
                 }
             } catch (Exception error)
             {

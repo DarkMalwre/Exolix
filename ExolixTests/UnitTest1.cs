@@ -20,8 +20,8 @@ namespace ExolixTests
     {
         public static void Main(string[] args)
         {
-            Logger.PrintLine("Exolix".Pastel("#60cdff") + " Scratch Test | Socket Server".Pastel("#ffffff"));
-            Logger.PrintLine("───────────────────────────────────".Pastel("#555555"));
+            Logger.PrintLine("Exolix".Pastel("#60cdff") + " Scratch | Socket Server".Pastel("#ffffff"));
+            Logger.PrintLine("───────────────────────────────────────".Pastel("#555555"));
 
             SocketServer server = new SocketServer();
 
@@ -29,9 +29,9 @@ namespace ExolixTests
             {
                 Logger.PrintLine("[Test] New connection!");
 
-                conn.OnMessage<Typess>("max", (msg) =>
+                conn.OnMessage("max", (msg) =>
                 {
-                    Logger.PrintLine($"[Test] New message! Message = {msg.Msg}");
+                    Logger.PrintLine($"[Test] New message! Message = ");
                 });
             });
 
