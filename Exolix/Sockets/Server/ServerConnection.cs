@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
 namespace Exolix.Sockets.Server
 {
-    public class ServerConnection
+    public class ServerConnection : ConnectionEvents
     {
         public string ID = "";
 
         public ServerConnection(CoreServerConnection coreConnection)
         {
             ID = coreConnection.ID;
+        }
+    }
+
+    public interface ConnectionMessage
+    {
+        string Channel
+        {
+            get;
         }
     }
 
@@ -34,11 +43,20 @@ namespace Exolix.Sockets.Server
             }
         }
 
-        protected override void OnMessage(MessageEventArgs e)
+        protected override void OnMessage(MessageEventArgs messageEvent)
         {
-            foreach (var eventAction in Server!.OnMessageEvents.ToArray())
+            try
             {
-                eventAction();
+                JsonElement parsedMessage = JsonDocument.Parse(messageEvent.Data).RootElement;
+
+                foreach (var eventTuple in Connection!.OnMessageEvents.ToArray())
+                {
+                    Console.WriteLine("[Debug] Message: " + parsedMessage);
+                    eventTuple.Item1(parsedMessage);
+                }
+            } catch (Exception error)
+            {
+                Console.Error.WriteLine(error.ToString());
             }
         }
     }

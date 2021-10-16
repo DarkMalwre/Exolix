@@ -8,6 +8,14 @@ using WebSocketSharp.Server;
 
 namespace ExolixTests
 {
+    public interface Typess
+    {
+        string Msg
+        {
+            get;
+        }
+    }
+
     public class Tests
     {
         public static void Main(string[] args)
@@ -20,6 +28,11 @@ namespace ExolixTests
             server.OnOpen((conn) =>
             {
                 Logger.PrintLine("[Test] New connection!");
+
+                conn.OnMessage<Typess>("max", (msg) =>
+                {
+                    Logger.PrintLine($"[Test] New message! Message = {msg.Msg}");
+                });
             });
 
             server.Run();
