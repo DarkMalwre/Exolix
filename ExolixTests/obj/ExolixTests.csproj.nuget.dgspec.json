@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\ExolixTests\\ExolixTests.csproj": {}
+    "C:\\Users\\xfaon\\source\\repos\\Exolix\\ExolixTests\\ExolixTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\ExolixTests\\ExolixTests.csproj": {
+    "C:\\Users\\xfaon\\source\\repos\\Exolix\\ExolixTests\\ExolixTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\ExolixTests\\ExolixTests.csproj",
+        "projectUniqueName": "C:\\Users\\xfaon\\source\\repos\\Exolix\\ExolixTests\\ExolixTests.csproj",
         "projectName": "ExolixTests",
-        "projectPath": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\ExolixTests\\ExolixTests.csproj",
-        "packagesPath": "C:\\Users\\tabis\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\ExolixTests\\obj\\",
+        "projectPath": "C:\\Users\\xfaon\\source\\repos\\Exolix\\ExolixTests\\ExolixTests.csproj",
+        "packagesPath": "C:\\Users\\xfaon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xfaon\\source\\repos\\Exolix\\ExolixTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\tabis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\xfaon\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\Exolix\\Exolix.csproj": {
-                "projectPath": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\Exolix\\Exolix.csproj"
+              "C:\\Users\\xfaon\\source\\repos\\Exolix\\Exolix\\Exolix.csproj": {
+                "projectPath": "C:\\Users\\xfaon\\source\\repos\\Exolix\\Exolix\\Exolix.csproj"
               }
             }
           }
@@ -84,20 +84,20 @@
         }
       }
     },
-    "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\Exolix\\Exolix.csproj": {
+    "C:\\Users\\xfaon\\source\\repos\\Exolix\\Exolix\\Exolix.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\Exolix\\Exolix.csproj",
+        "projectUniqueName": "C:\\Users\\xfaon\\source\\repos\\Exolix\\Exolix\\Exolix.csproj",
         "projectName": "Exolix",
-        "projectPath": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\Exolix\\Exolix.csproj",
-        "packagesPath": "C:\\Users\\tabis\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tabis\\Source\\Repos\\AxeriDev\\Exolix\\Exolix\\obj\\",
+        "projectPath": "C:\\Users\\xfaon\\source\\repos\\Exolix\\Exolix\\Exolix.csproj",
+        "packagesPath": "C:\\Users\\xfaon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xfaon\\source\\repos\\Exolix\\Exolix\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\tabis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\xfaon\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

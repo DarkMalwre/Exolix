@@ -42,7 +42,35 @@ namespace ExolixTests
                 });
             });
 
-            Animation.Start("Loading Some Beans");
+            Animation.Start("Loading Some Beans", new AnimationSettings()
+            {
+                Interval = 100,
+                Frames = new[] {
+                    "   ", 
+                    ".  ",
+                    ".. ",
+                    "...",
+                    " ..",
+                    "  .",
+                    "   ",
+                    ".  ",
+                    ".. ",
+                    "...",
+                    " ..",
+                    "  .",
+                    " | ",
+                    " / ",
+                    " - ",
+                    " \\ ",
+                    " | ",
+                    " / ",
+                    " - ",
+                    " \\ "
+                }
+            });
+
+            System.Threading.Thread.Sleep(3000);
+            //Animation.Stop(null);
 
             //server.Run();
         }
