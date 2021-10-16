@@ -42,35 +42,10 @@ namespace ExolixTests
                 });
             });
 
-            Animation.Start("Loading Some Beans", new AnimationSettings()
-            {
-                Interval = 100,
-                Frames = new[] {
-                    "   ", 
-                    ".  ",
-                    ".. ",
-                    "...",
-                    " ..",
-                    "  .",
-                    "   ",
-                    ".  ",
-                    ".. ",
-                    "...",
-                    " ..",
-                    "  .",
-                    " | ",
-                    " / ",
-                    " - ",
-                    " \\ ",
-                    " | ",
-                    " / ",
-                    " - ",
-                    " \\ "
-                }
-            });
+            Animation.Start("Loading Some Beans", new AnimationSettings());
 
             System.Threading.Thread.Sleep(3000);
-            //Animation.Stop(null);
+            Animation.Stop("Uwu");
 
             //server.Run();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pastel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,13 @@ namespace Exolix.Terminal
     {
         public string? Prefix = "";
 
-        public string[]? Frames = { "|", "/", "-", "\\" };
+        public string[]? Frames = { "   ",
+            ".  ".Pastel("#60cdff"),
+            ".. ".Pastel("#60cdff"),
+            "...".Pastel("#60cdff"),
+            " ..".Pastel("#60cdff"),
+            "  .".Pastel("#60cdff")
+        };
 
         public string? State = "processing";
 
@@ -23,6 +30,7 @@ namespace Exolix.Terminal
         private static Thread? RenderingThreadInstance;
         private static int CurrentFrame = 0;
         private static AnimationSettings? Settings;
+        private static string Label = "";
 
         public static void Start(string label, AnimationSettings? settings)
         {
@@ -35,6 +43,7 @@ namespace Exolix.Terminal
 
             Running = true;
             CurrentFrame = 0;
+            Label = label;
 
             Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
             renderingThread.Start();
@@ -46,7 +55,13 @@ namespace Exolix.Terminal
         {
             if (Running)
             {
+                if (label != null)
+                {
+                    Label = label;
+                }
+
                 Running = false;
+                RenderCurrentFrame();
                 return;
             }
 
@@ -63,10 +78,38 @@ namespace Exolix.Terminal
                     CurrentFrame = 0;
                 }
 
-                Console.Write("\r" + Settings!.Frames[CurrentFrame] + " Label Is Here");
-
+                RenderCurrentFrame();
                 Thread.Sleep((int)Settings!.Interval!);
             } while (Running);
+        }
+
+        public static void RenderCurrentFrame()
+        {
+            int consoleWith = Console.WindowWidth - Settings!.Frames[CurrentFrame].Length;
+            if (consoleWith < 0)
+            {
+                consoleWith = 0;
+            }
+
+            string outputLabel = Label;
+            string suffixSpacing = "";
+
+            if (outputLabel.Length > consoleWith)
+            {
+                outputLabel = outputLabel.Substring(0, consoleWith);
+            }
+            else
+            {
+                int suffixLength = consoleWith - outputLabel.Length - Settings!.Frames[CurrentFrame].Length;
+                if (suffixLength < 0)
+                {
+                    suffixLength = 0;
+                }
+
+                suffixSpacing = new string(' ', suffixLength);
+            }
+
+            Console.Write($"\r{Settings!.Frames[CurrentFrame]} {outputLabel}{suffixSpacing}");
         }
     }
 }
