@@ -5,15 +5,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Axeri</Authors>
     <PackageProjectUrl>https://github.com/AxeriDev/Exolix</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AxeriDev/Exolix</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Sockets\Server\Events.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

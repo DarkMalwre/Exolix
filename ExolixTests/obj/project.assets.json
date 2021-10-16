@@ -1589,7 +1589,7 @@
           "lib/websocket-sharp.dll": {}
         }
       },
-      "Exolix/0.2.0": {
+      "Exolix/0.2.1": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
@@ -5965,7 +5965,7 @@
         "websocketsharp.nuspec"
       ]
     },
-    "Exolix/0.2.0": {
+    "Exolix/0.2.1": {
       "type": "project",
       "path": "../Exolix/Exolix.csproj",
       "msbuildProject": "../Exolix/Exolix.csproj"
@@ -5973,7 +5973,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "Exolix >= 0.2.0",
+      "Exolix >= 0.2.1",
       "MSTest.TestAdapter >= 2.2.7",
       "MSTest.TestFramework >= 2.2.7",
       "Microsoft.NET.Test.Sdk >= 16.11.0",
