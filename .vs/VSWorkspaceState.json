@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Exolix",
-    "\\ExolixTests",
-    "\\Exolix\\Terminal"
+    ""
   ],
-  "SelectedNode": "\\ExolixTests\\UnitTest1.cs",
+  "SelectedNode": "\\Exolix.sln",
   "PreviewInSolutionExplorer": false
 }

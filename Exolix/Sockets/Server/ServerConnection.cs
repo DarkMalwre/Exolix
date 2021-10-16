@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Exolix.Json;
+using Newtonsoft.Json;
+using Pastel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,16 +22,18 @@ namespace Exolix.Sockets.Server
         }
     }
 
-    public interface ConnectionMessage
+    public class ConnectionMessage
     {
-        string Channel
+        public string? Channel
         {
             get;
+            set;
         }
 
-        string Data
+        public string? Data
         {
             get;
+            set;
         }
     }
 
@@ -52,20 +57,25 @@ namespace Exolix.Sockets.Server
         {
             try
             {
-                ConnectionMessage parsedMessage = JsonDocument.Parse(messageEvent.Data);
-                ConnectionMessage! parsedMessageNew = parsedMessage as ConnectionMessage;
+                ConnectionMessage parsedMessage = JsonHandler.Parse<ConnectionMessage>(messageEvent.Data);
 
-                foreach (var eventTuple in Connection!.OnMessageEvents.ToArray())
+                if (parsedMessage.Data != null && parsedMessage.Channel != null)
                 {
-
-                    if (parsedMessageNew != null & parsedMessageNew?.Data != null & parsedMessageNew?.Channel != null)
+                    foreach (var eventTuple in Connection!.OnMessageEvents.ToArray())
                     {
-                        eventTuple.Item1(parsedMessageNew!.Data.ToString());
+                        if (parsedMessage.Channel == eventTuple.Item2)
+                        {
+                            if (parsedMessage.Data is string)
+                            {
+                                eventTuple.Item1(parsedMessage.Data);
+                            }
+                        }
                     }
                 }
             } catch (Exception error)
             {
-                Console.Error.WriteLine(error.ToString());
+                Console.Error.WriteLine(error.ToString().Pastel("#ff0055"));
+                Sessions.CloseSession(ID);
             }
         }
     }

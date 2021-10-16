@@ -6,11 +6,20 @@ using System.Threading.Tasks;
 
 namespace Exolix.Terminal
 {
+    public class AnimationSettings
+    {
+        string Pref
+        {
+            get;
+            set;
+        }
+    }
+
     public class Animation
     {
-        public static void Start()
+        public static void Start(string label)
         {
-            Console.WriteLine("[ Err ] In Dev");
+            AnimationSettings settings = new AnimationSettings();
         }
     }
 }

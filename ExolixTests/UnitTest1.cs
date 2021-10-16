@@ -1,4 +1,5 @@
-﻿using Exolix.Sockets.Server;
+﻿using Exolix.Json;
+using Exolix.Sockets.Server;
 using Exolix.Terminal;
 using Pastel;
 using System;
@@ -18,6 +19,11 @@ namespace ExolixTests
 
     public class Tests
     {
+        public class DemoMessage
+        {
+            public string? Message;
+        }
+
         public static void Main(string[] args)
         {
             Logger.PrintLine("Exolix".Pastel("#60cdff") + " Scratch | Socket Server".Pastel("#ffffff"));
@@ -31,11 +37,14 @@ namespace ExolixTests
 
                 conn.OnMessage("max", (msg) =>
                 {
-                    Logger.PrintLine($"[Test] New message! Message = ");
+                    DemoMessage message = JsonHandler.Parse<DemoMessage>(msg);
+                    Logger.PrintLine($"[Test] New message! Message = {message.Message}");
                 });
             });
 
-            server.Run();
+            Animation.Start("Loading Some Beans");
+
+            //server.Run();
         }
     }
 
