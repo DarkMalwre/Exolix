@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "ExolixTests/1.0.0": {
         "dependencies": {
-          "Exolix": "1.0.0",
+          "Exolix": "0.2.1",
           "MSTest.TestAdapter": "2.2.7",
           "MSTest.TestFramework": "2.2.7",
           "Microsoft.NET.Test.Sdk": "16.11.0",
@@ -1024,7 +1024,7 @@
           }
         }
       },
-      "Exolix/1.0.0": {
+      "Exolix/0.2.1": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
           "Pastel": "2.1.0",
@@ -1652,7 +1652,7 @@
       "path": "websocketsharp/1.0.3-rc11",
       "hashPath": "websocketsharp.1.0.3-rc11.nupkg.sha512"
     },
-    "Exolix/1.0.0": {
+    "Exolix/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

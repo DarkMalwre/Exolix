@@ -19,20 +19,19 @@ namespace Exolix.Terminal
             "  .".Pastel("#60cdff")
         };
 
-        public string? State = "processing";
-
         public int? Interval = 100;
     }
 
     public class Animation
     {
-        private static bool Running = false;
         private static Thread? RenderingThreadInstance;
-        private static int CurrentFrame = 0;
         private static AnimationSettings? Settings;
+        private static string State = "processing";
+        private static int CurrentFrame = 0;
+        private static bool Running = false;
         private static string Label = "";
 
-        public static void Start(string label, AnimationSettings? settings)
+        public static void Start(string label, AnimationSettings? settings = null)
         {
             if (settings == null)
             {
@@ -40,7 +39,7 @@ namespace Exolix.Terminal
             }
 
             Settings = settings;
-
+            State = "processing";
             Running = true;
             CurrentFrame = 0;
             Label = label;
@@ -51,21 +50,40 @@ namespace Exolix.Terminal
             RenderingThreadInstance = renderingThread;
         }
 
-        public static void Stop(string? label)
+        public static void Stop(string? label = "", string newState = "success")
         {
-            if (Running)
+            if (newState == "success" || newState == "processing" || newState == "error" || newState == "warning")
             {
-                if (label != null)
+                if (Running)
                 {
-                    Label = label;
+                    if (label != null)
+                    {
+                        Label = label;
+                    }
+
+                    Running = false;
+                    string prefixHex = "#60cdff";
+
+                    if (newState == "success")
+                    {
+                        prefixHex = "#60cdff";
+                    } else if (newState == "error")
+                    {
+                        prefixHex = "#ff0055";
+                    } else if (prefixHex == "warning")
+                    {
+                        prefixHex = "#FFA500";
+                    }
+
+                    RenderCurrentFrame("·".Pastel(prefixHex));
+                    return;
                 }
 
-                Running = false;
-                RenderCurrentFrame();
+                new Exception("Animation is not running");
                 return;
             }
 
-            new Exception("Animation is not running");
+            new Exception("Invalid state type, the following states are supported [ \"processing\", \"success\", \"warning\", \"error\" ] ");
         }
 
         private static void FrameRenderingThread()
@@ -83,9 +101,9 @@ namespace Exolix.Terminal
             } while (Running);
         }
 
-        public static void RenderCurrentFrame()
+        public static void RenderCurrentFrame(string? prefixIcon = null)
         {
-            int consoleWith = Console.WindowWidth - Settings!.Frames[CurrentFrame].Length;
+            int consoleWith = Console.WindowWidth - Settings!.Frames![CurrentFrame].Length;
             if (consoleWith < 0)
             {
                 consoleWith = 0;
@@ -109,7 +127,12 @@ namespace Exolix.Terminal
                 suffixSpacing = new string(' ', suffixLength);
             }
 
-            Console.Write($"\r{Settings!.Frames[CurrentFrame]} {outputLabel}{suffixSpacing}");
+            if (prefixIcon == null)
+            {
+                prefixIcon = Settings!.Frames[CurrentFrame];
+            }
+
+            Console.Write($"\r {prefixIcon} {outputLabel}{suffixSpacing}");
         }
     }
 }

@@ -42,10 +42,10 @@ namespace ExolixTests
                 });
             });
 
-            Animation.Start("Loading Some Beans", new AnimationSettings());
+            Animation.Start("Loading Some Beans · · ·", new AnimationSettings());
 
             System.Threading.Thread.Sleep(3000);
-            Animation.Stop("Uwu");
+            Animation.Stop("Failed to load the beans", "error");
 
             //server.Run();
         }
