@@ -15,6 +15,7 @@ namespace Exolix.Sockets.Client
         {
             OnOpenEvents.Add(handler);
         }
+
         public void OnMessage(string channel, Action<string> handler)
         {
             OnMessageEvents.Add(Tuple.Create(handler, channel));

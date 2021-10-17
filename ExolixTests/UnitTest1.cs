@@ -73,7 +73,7 @@ namespace ExolixTests
                 Logger.Info("[ Client ] Connected to server");
             });
 
-            client.OnMessage((msg) =>
+            client.OnMessage("main", (msg) =>
             {
                 Logger.Info("[ Client ] Message: " + msg);
             });

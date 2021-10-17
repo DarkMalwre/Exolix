@@ -1,4 +1,5 @@
 ﻿using Exolix.Json;
+using Exolix.Sockets.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,27 @@ namespace Exolix.Sockets.Client
                 foreach (var eventCallback in OnOpenEvents)
                 {
                     eventCallback();
+                }
+            };
+
+            Socket.OnMessage += (sender, e) =>
+            {
+                try
+                {
+                    ConnectionMessage parsedMessage = JsonHandler.Parse<ConnectionMessage>(e.Data);
+
+                    if (parsedMessage.Channel != null && parsedMessage.Data != null && parsedMessage.Data is string)
+                    {
+                        foreach (var eventTuple in OnMessageEvents)
+                        {
+                            if (eventTuple.Item2 == parsedMessage.Channel) {
+                                eventTuple.Item1(JsonHandler.Stringify(parsedMessage.Data));
+                            }
+                        }
+                    }
+                } catch (Exception ex)
+                {
+                    Terminal.Logger.ErrorException(ex);
                 }
             };
 

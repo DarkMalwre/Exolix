@@ -48,17 +48,9 @@ namespace Exolix.Sockets.Server
 
     public class ConnectionMessage
     {
-        public string? Channel
-        {
-            get;
-            set;
-        }
+        public string? Channel;
 
-        public string? Data
-        {
-            get;
-            set;
-        }
+        public string? Data;
     }
 
     public class CoreServerConnection: WebSocketBehavior
