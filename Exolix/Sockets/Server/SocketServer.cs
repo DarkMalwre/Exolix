@@ -33,8 +33,23 @@ namespace Exolix.Sockets.Server
 
         private void RunThreadLogic()
         {
-            Console.WriteLine($"{(Settings!.Secure ? "wss://" : "ws://")}{Settings.Host}{(Settings.Port != null ? ":" + Settings.Port : "")}");
-            var server = new WebSocketServer($"{(Settings!.Secure ? "wss://" : "ws://")}{Settings.Host}{(Settings.Port != null ? ":" + Settings.Port : "")}");
+            Console.WriteLine(Settings.ToString());
+
+            string prefix = "ws://";
+            if (Settings!.Secure)
+            {
+                prefix = "wss://";
+            }
+
+            string suffix = "";
+            if (Settings!.Port != null)
+            {
+                suffix = ":" + Settings!.Port;
+            }
+
+            string serverUrl = prefix + Settings!.Host + suffix;
+
+            var server = new WebSocketServer(serverUrl);
             server.AddWebSocketService("/", () => {
                 CoreServerConnection coreConnection = new CoreServerConnection();
                 coreConnection.Server = this;
