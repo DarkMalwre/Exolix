@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Exolix.Sockets.Server
 {
-    public class Events
+    public class ServerEvents
     {
         public List<Action<ServerConnection>> OnOpenEvents = new List<Action<ServerConnection>>();
 

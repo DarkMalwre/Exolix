@@ -1,4 +1,5 @@
 ﻿using Exolix.Json;
+using Exolix.Sockets.Client;
 using Exolix.Sockets.Server;
 using Exolix.Terminal;
 using Pastel;
@@ -45,7 +46,7 @@ namespace ExolixTests
 
                 connection.OnClose(() =>
                 {
-                    Logger.Info(" - Connection Closed");
+                    Logger.Info("- Connection Closed");
                 });
 
                 connection.Send("main", new MessageType
@@ -57,6 +58,29 @@ namespace ExolixTests
             server.Run();
 
             Logger.Success("Server started at port 80");
+
+            //System.Threading.Thread.Sleep(500);
+
+            Logger.Info("Connecting to server via client");
+
+            SocketClient client = new SocketClient(new SocketClientSettings
+            {
+                Port = 80
+            });
+
+            client.OnOpen(() =>
+            {
+                Logger.Info("[ Client ] Connected to server");
+            });
+
+            client.OnMessage((msg) =>
+            {
+                Logger.Info("[ Client ] Message: " + msg);
+            });
+
+            client.Run();
+
+            Logger.Info("Done with actions");
         }
 
         public static void DoException(SocketServer server)

@@ -30,7 +30,7 @@ namespace Exolix.Sockets.Server
         public ServerNodeItem[]? NodeList = null;
     }
 
-    public class SocketServer : Events
+    public class SocketServer : ServerEvents
     {
         private SocketServerSettings? Settings;
         private bool Running = false;
@@ -88,8 +88,7 @@ namespace Exolix.Sockets.Server
             }
 
             Running = true;
-            Thread thread = new Thread(new ThreadStart(RunThreadLogic));
-            thread.Start();
+            new Thread(new ThreadStart(RunThreadLogic)).Start();
         }
 
         public void Stop()
