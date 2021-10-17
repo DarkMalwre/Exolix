@@ -9,9 +9,9 @@ namespace Exolix.Terminal
 {
     public class AnimationSettings
     {
-        public string? Prefix = "";
+        public string Prefix = "";
 
-        public string[]? Frames = { "   ",
+        public string[] Frames = { "   ",
             ".  ",
             ".. ",
             "...",
@@ -19,9 +19,9 @@ namespace Exolix.Terminal
             "  ."
         };
 
-        public int? Interval = 100;
+        public int Interval = 100;
 
-        public string? FrameHexColor = "60cdff";
+        public string FrameHexColor = "60cdff";
     }
 
     public class Animation
@@ -100,13 +100,13 @@ namespace Exolix.Terminal
             do
             {
                 CurrentFrame++;
-                if (CurrentFrame > Settings!.Frames!.Length - 1)
+                if (CurrentFrame > Settings!.Frames.Length - 1)
                 {
                     CurrentFrame = 0;
                 }
 
                 RenderCurrentFrame();
-                Thread.Sleep((int)Settings!.Interval!);
+                Thread.Sleep((int)Settings!.Interval);
             } while (Running);
         }
 
@@ -119,7 +119,7 @@ namespace Exolix.Terminal
 
             if (prefixIcon == null)
             {
-                prefixIcon = Settings!.Frames![CurrentFrame];
+                prefixIcon = Settings!.Frames[CurrentFrame];
             }
 
             if (consoleWidth - LastOutput.Length >= 0)
