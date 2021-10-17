@@ -33,7 +33,7 @@ namespace Exolix.Sockets.Server
         {
             try
             {
-                string parsedMessage = JsonHandler.Stringify<MessageType>(message);
+                string parsedMessage = JsonHandler.Stringify(message);
                 CoreConnection.SendMessage(JsonHandler.Stringify(new ServerConnectionMessage
                 {
                     Channel = channel,

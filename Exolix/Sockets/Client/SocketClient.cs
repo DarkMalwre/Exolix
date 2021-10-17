@@ -71,7 +71,7 @@ namespace Exolix.Sockets.Client
                         foreach (var eventTuple in OnMessageEvents)
                         {
                             if (eventTuple.Item2 == parsedMessage.Channel) {
-                                eventTuple.Item1(JsonHandler.Stringify(parsedMessage.Data));
+                                eventTuple.Item1(parsedMessage.Data);
                             }
                         }
                     }

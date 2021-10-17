@@ -75,7 +75,9 @@ namespace ExolixTests
 
             client.OnMessage("main", (msg) =>
             {
-                Logger.Info("[ Client ] Message: " + msg);
+                Logger.Info("[ Client ] Message: " + msg.TrimStart('"').TrimEnd('"'));
+                MessageType message = JsonHandler.Parse<MessageType>(msg.TrimStart('"').TrimEnd('"'));
+                Logger.Info("[ Client ] Message: " + message.Msg);
             });
 
             client.Run();
