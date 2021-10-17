@@ -36,10 +36,6 @@ namespace Exolix.Sockets.Server
         private bool Running = false;
         private WebSocketServer? Server = null;
 
-        /// <summary>
-        ///     Create fast and easy to use TCP sockets
-        /// </summary>
-        /// <param name="settings">Settings for the server</param>
         public SocketServer(SocketServerSettings? settings = null)
         {
            if (settings == null)
@@ -102,8 +98,5 @@ namespace Exolix.Sockets.Server
             Server?.Stop();
             Logger.KeepAlive(false);
         }
-    }
-
-    public class EventCoreCommander { 
     }
 }
