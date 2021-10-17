@@ -10,14 +10,15 @@ using System.Threading.Tasks;
 
 namespace Exolix.Terminal
 {
+    [Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
     public class Logger
     {
         private static bool KeepAliveState = false;
         private static Thread? KeepAliveThreadInstance;
 
-        public static void Info(string text)
+        public static void Info(string message)
         {
-            Console.WriteLine(text);
+            PrintLineDynamic(" ·".Pastel("#60cdff") + " " + message);
         }
 
         public static void PrintDynamic(string stdOutRaw)
@@ -29,6 +30,21 @@ namespace Exolix.Terminal
             }
 
             Console.Write(stdOutRaw);
+        }
+
+        public static void Success(string message)
+        {
+            PrintLineDynamic(" ·".Pastel("#50ffab") + " " + message);
+        }
+
+        public static void Error(string message)
+        {
+            PrintLineDynamic(" ·".Pastel("#ff5555") + " " + message);
+        }
+
+        public static void Warning(string message)
+        {
+            PrintLineDynamic(" ·".Pastel("#ffff55") + " " + message);
         }
 
         public static void PrintLineDynamic(string stdOutText)

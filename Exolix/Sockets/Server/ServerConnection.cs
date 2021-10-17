@@ -81,7 +81,7 @@ namespace Exolix.Sockets.Server
 
             foreach (var eventAction in Server!.OnOpenEvents.ToArray())
             {
-                eventAction(connection);
+                new Thread(new ThreadStart(() => { eventAction(connection); })).Start();
             }
         }
 
@@ -99,7 +99,7 @@ namespace Exolix.Sockets.Server
                         {
                             if (parsedMessage.Data is string)
                             {
-                                eventTuple.Item1(parsedMessage.Data);
+                                new Thread(new ThreadStart(() => { eventTuple.Item1(parsedMessage.Data); })).Start();
                             }
                         }
                     }

@@ -19,7 +19,7 @@ namespace Exolix.Terminal
             "  ."
         };
 
-        public int Interval = 100;
+        public int Interval = 50;
 
         public string FrameHexColor = "60cdff";
     }
@@ -112,10 +112,12 @@ namespace Exolix.Terminal
 
         public static void RenderCurrentFrame(string? prefixIcon = null, string? prefixHex = null)
         {
-            string suffixSpacing = "";
+            string suffixSpacing;
             string outputLabel = Label;
+            string renderPrefixIcon;
 
             int consoleWidth = Console.WindowWidth;
+            int suffixLength;
 
             if (prefixIcon == null)
             {
@@ -127,13 +129,14 @@ namespace Exolix.Terminal
                 // TODO: Cut off label
             }
 
-            if ($"{prefixIcon} {outputLabel}".Length < LastOutput.Length) 
+            suffixLength = consoleWidth - outputLabel.Length - prefixIcon.Length - 1;
+            if (suffixLength < 0)
             {
-                int suffixSize = LastOutput.Length - $"{prefixIcon} {outputLabel}".Length;
-                suffixSpacing = new string(' ', suffixSize);
+                suffixLength = 0;
             }
 
-            string renderPrefixIcon = "";
+            suffixSpacing = new string('-', suffixLength);
+
             if (prefixHex == null)
             {
                 renderPrefixIcon = prefixIcon.Pastel("#" + Settings!.FrameHexColor);
