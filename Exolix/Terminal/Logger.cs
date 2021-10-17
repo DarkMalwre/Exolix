@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Exolix.Terminal
 {
-    [Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
     public class Logger
     {
         private static bool KeepAliveState = false;
