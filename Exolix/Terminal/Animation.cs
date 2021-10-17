@@ -58,7 +58,7 @@ namespace Exolix.Terminal
             }
         }
 
-        public static void Stop(string? label = "", string newState = "success")
+        public static void Stop(string? label = null, string newState = "success")
         {
             if (newState == "success" || newState == "processing" || newState == "error" || newState == "warning")
             {

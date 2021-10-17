@@ -14,7 +14,7 @@ namespace Exolix.Sockets.Server
            
         }
 
-        public void Run()
+        private void RunThreadLogic()
         {
             var server = new WebSocketServer("ws://localhost:8090");
             server.AddWebSocketService("/", () => {
@@ -22,10 +22,17 @@ namespace Exolix.Sockets.Server
                 coreConnection.Server = this;
 
                 return coreConnection;
-;           });
+                ;
+            });
 
             server.Start();
             Console.ReadKey(true);
+        }
+
+        public void Run()
+        {
+            Thread thread = new Thread(new ThreadStart(RunThreadLogic));
+            thread.Start();
         }
     }
 

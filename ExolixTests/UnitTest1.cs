@@ -26,28 +26,11 @@ namespace ExolixTests
 
         public static void Main(string[] args)
         {
-            Animation.Start("Connecting to Ethermine with query".Pastel("#999999") + " host=ethermine.net port=5555 protocol=TCP".Pastel("#ffffff"));
-            System.Threading.Thread.Sleep(500);
+            Animation.Start("Hosting new server");
+            SocketServer server = new SocketServer();
 
-            Animation.Stop("Successfully conected to Ethermine server");
-            Animation.Start("Authenticating client tokens");
-
-            System.Threading.Thread.Sleep(500);
-            Animation.Stop("All tokens have been accepted by Ethermine");
-
-            Animation.Start("Checking system block handlers");
-            System.Threading.Thread.Sleep(500);
-
-            Animation.Stop("Block handlers are ready");
-
-            while (true)
-            {
-                System.Threading.Thread.Sleep(1000);
-                Animation.Start("Looking for block");
-                System.Threading.Thread.Sleep(1000);
-
-                Animation.Stop("Finished mining through block");
-            }
+            server.Run();
+            Animation.Stop();
         }
     }
 
