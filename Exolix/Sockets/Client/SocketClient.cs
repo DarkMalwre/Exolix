@@ -103,5 +103,14 @@ namespace Exolix.Sockets.Client
             new Thread(new ThreadStart(RunThreadLogic)).Start();
             Terminal.Logger.KeepAlive(true);
         }
+
+        public void Send<MessageType>(string channel, MessageType message)
+        {
+            Socket!.Send(JsonHandler.Stringify(new ConnectionMessage
+            {
+                Channel = channel,
+                Data = JsonHandler.Stringify(message)
+            }));
+        }
     }
 }

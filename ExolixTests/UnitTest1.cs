@@ -71,6 +71,10 @@ namespace ExolixTests
             client.OnOpen(() =>
             {
                 Logger.Info("[ Client ] Connected to server");
+                client.Send("main", new MessageType
+                {
+                    Msg = "Hello new service"
+                });
             });
 
             client.OnMessage("main", (msg) =>
