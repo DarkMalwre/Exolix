@@ -19,6 +19,13 @@ namespace Exolix.Sockets.Server
         public string? Port = null;
     }
 
+    public class NodeAuthData
+    {
+        public string User = "";
+
+        public string Key = "";
+    }
+
     public class SocketServerSettings
     {
         public string Host = "localhost";
@@ -28,6 +35,8 @@ namespace Exolix.Sockets.Server
         public bool Secure = false;
 
         public ServerNodeItem[]? NodeList = null;
+
+        public NodeAuthData? NodeAuthData = null;
     }
 
     public class SocketServer : ServerEvents
