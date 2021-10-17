@@ -70,20 +70,20 @@ namespace Exolix.Terminal
                     }
 
                     Running = false;
-                    string prefixHex = "#60CDFF";
+                    string prefixHex = "60CDFF";
 
                     if (newState == "success")
                     {
-                        prefixHex = "#50FFAB";
+                        prefixHex = "50FFAB";
                     } else if (newState == "error")
                     {
-                        prefixHex = "#FF0055";
+                        prefixHex = "FF0055";
                     } else if (newState == "warning")
                     {
-                        prefixHex = "#FFA500";
+                        prefixHex = "FFA500";
                     }
 
-                    RenderCurrentFrame("·".Pastel(prefixHex));
+                    RenderCurrentFrame("·", prefixHex);
                     Logger.PrintDynamic("\n");
                     return;
                 }
@@ -110,7 +110,7 @@ namespace Exolix.Terminal
             } while (Running);
         }
 
-        public static void RenderCurrentFrame(string? prefixIcon = null)
+        public static void RenderCurrentFrame(string? prefixIcon = null, string? prefixHex = null)
         {
             string suffixSpacing = "";
             string outputLabel = Label;
@@ -133,7 +133,16 @@ namespace Exolix.Terminal
                 suffixSpacing = new string(' ', suffixSize);
             }
 
-            Logger.PrintDynamic($"\r {prefixIcon.Pastel("#" + Settings!.FrameHexColor)} {outputLabel}{suffixSpacing}");
+            string renderPrefixIcon = "";
+            if (prefixHex == null)
+            {
+                renderPrefixIcon = prefixIcon.Pastel("#" + Settings!.FrameHexColor);
+            } else
+            {
+                renderPrefixIcon = prefixIcon.Pastel("#" + prefixHex);
+            }
+             
+            Logger.PrintDynamic($"\r {renderPrefixIcon} {outputLabel}{suffixSpacing}");
             LastOutput = $"{prefixIcon} {outputLabel}";
         }
     }

@@ -55,6 +55,7 @@ namespace ExolixTests
             });
 
             server.Run();
+            System.Threading.Thread.Sleep(1000);
             Animation.Stop();
         }
     }
