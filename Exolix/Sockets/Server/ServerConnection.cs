@@ -42,6 +42,14 @@ namespace Exolix.Sockets.Server
         public SocketServer? Server;
         public ServerConnection? Connection;
 
+        protected override void OnClose(CloseEventArgs e)
+        {
+            foreach (var eventAction in Connection!.OnCloseEvents.ToArray())
+            {
+                eventAction();
+            }
+        }
+
         protected override void OnOpen()
         {
             ServerConnection connection = new ServerConnection(this);

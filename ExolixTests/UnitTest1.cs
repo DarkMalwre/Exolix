@@ -31,12 +31,17 @@ namespace ExolixTests
 
             server.OnOpen((connection) =>
             {
-                Logger.Info(" New Connection");
+                Logger.Info(" + New Connection");
 
                 connection.OnMessage("main", (msg) =>
                 {
                     MessageType message = JsonHandler.Parse<MessageType>(msg);
                     Logger.Info(" Message: " + message.Msg);
+                });
+
+                connection.OnClose(() =>
+                {
+                    Logger.Info(" - Connection Closed");
                 });
             });
 
