@@ -56,8 +56,6 @@ namespace ExolixTests
 
             server.Run();
 
-            DoException(server);
-
             Logger.Success("Server started at port 80");
         }
 
