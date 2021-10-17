@@ -37,11 +37,20 @@ namespace ExolixTests
                 {
                     MessageType message = JsonHandler.Parse<MessageType>(msg);
                     Logger.Info(" Message: " + message.Msg);
+                    connection.Send("main", new MessageType
+                    {
+                        Msg = message.Msg,
+                    });
                 });
 
                 connection.OnClose(() =>
                 {
                     Logger.Info(" - Connection Closed");
+                });
+
+                connection.Send("main", new MessageType
+                {
+                    Msg = "Heyy"
                 });
             });
 

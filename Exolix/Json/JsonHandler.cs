@@ -16,5 +16,10 @@ namespace Exolix.Json
                 TypeNameHandling = TypeNameHandling.Auto
             })!;
         }
+
+        public static string Stringify<DocumentType>(DocumentType json)
+        {
+            return JsonConvert.SerializeObject(json);
+        }
     }
 }

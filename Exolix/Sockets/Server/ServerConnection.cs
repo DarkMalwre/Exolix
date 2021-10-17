@@ -12,13 +12,37 @@ using WebSocketSharp.Server;
 
 namespace Exolix.Sockets.Server
 {
+    public class ServerConnectionMessage
+    {
+        public string? Channel = null;
+        public string? Data = null;
+    }
+
     public class ServerConnection : ConnectionEvents
     {
         public string ID = "";
+        private CoreServerConnection CoreConnection;
 
         public ServerConnection(CoreServerConnection coreConnection)
         {
             ID = coreConnection.ID;
+            CoreConnection = coreConnection;
+        }
+
+        public void Send<MessageType>(string channel, MessageType message)
+        {
+            try
+            {
+                string parsedMessage = JsonHandler.Stringify<MessageType>(message);
+                CoreConnection.SendMessage(JsonHandler.Stringify(new ServerConnectionMessage
+                {
+                    Channel = channel,
+                    Data = parsedMessage
+                }));
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
         }
     }
 
@@ -85,6 +109,11 @@ namespace Exolix.Sockets.Server
                 Console.Error.WriteLine(error.ToString().Pastel("#ff0055"));
                 Sessions.CloseSession(ID);
             }
+        }
+
+        public void SendMessage(string message)
+        {
+            Send(message);
         }
     }
 }
