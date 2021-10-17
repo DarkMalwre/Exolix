@@ -82,7 +82,7 @@ namespace Exolix.Sockets.Server
 
         public void Run()
         {
-            if (Running && Server != null && Server.IsListening)
+            if (Running)
             {
                 throw new Exception("Server is already running");
             }
@@ -94,7 +94,7 @@ namespace Exolix.Sockets.Server
 
         public void Stop()
         {
-            if (!Running && (Server == null || Server != null && !Server.IsListening))
+            if (!Running)
             {
                 throw new Exception("Server is not running");
             }

@@ -41,6 +41,17 @@ namespace Exolix.Terminal
             PrintLineDynamic(" · [ Error ]".Pastel("#ff5555") + " " + message);
         }
 
+        public static void ErrorException(Exception error)
+        {
+            Error(error.Message);
+            StackFrame[] stFrames = new StackTrace(1, true).GetFrames();
+
+            foreach (var stack in stFrames)
+            {
+                Error("    " + stack.ToString().Replace('\n', ' '));
+            }
+        }
+
         public static void Warning(string message)
         {
             PrintLineDynamic(" · [ Warning ]".Pastel("#ffff55") + " " + message);

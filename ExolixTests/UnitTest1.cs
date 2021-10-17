@@ -55,7 +55,27 @@ namespace ExolixTests
             });
 
             server.Run();
+
+            DoException(server);
+
             Logger.Success("Server started at port 80");
+        }
+
+        public static void DoException(SocketServer server)
+        {
+            DoExceptionSec(server);
+        }
+
+        public static void DoExceptionSec(SocketServer server)
+        {
+            try
+            {
+                server.Run();
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorException(ex);
+            }
         }
     }
 
