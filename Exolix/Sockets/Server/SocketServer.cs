@@ -16,7 +16,7 @@ namespace Exolix.Sockets.Server
 
         public string Host = "";
 
-        public string? Port = null;
+        public int? Port = null;
     }
 
     public class NodeAuthData
@@ -82,6 +82,12 @@ namespace Exolix.Sockets.Server
             });
 
             server.Start();
+
+            if (Settings.NodeList != null)
+            {
+                NodeClusterManager clusterManager = new NodeClusterManager(this, Settings.NodeList);
+            }
+
             Logger.KeepAlive(true);
         }
 

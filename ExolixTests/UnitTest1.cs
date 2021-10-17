@@ -27,65 +27,27 @@ namespace ExolixTests
             Logger.Info("Starting API server");
             SocketServer server = new SocketServer(new SocketServerSettings
             {
-                Port = 80
-            });
-
-            server.OnOpen((connection) =>
-            {
-                Logger.Info(" + New Connection");
-
-                connection.OnMessage("main", (msg) =>
+                Port = 80,
+                NodeAuthData = new NodeAuthData
                 {
-                    MessageType message = JsonHandler.Parse<MessageType>(msg);
-                    Logger.Info(" Message: " + message.Msg);
-                    connection.Send("main", new MessageType
+                    User = "DemoServer",
+                    Key = "DemoServer"
+                },
+                NodeList = new ServerNodeItem[]
+                {
+                    new ServerNodeItem
                     {
-                        Msg = message.Msg,
-                    });
-                });
-
-                connection.OnClose(() =>
-                {
-                    Logger.Info("- Connection Closed");
-                });
-
-                connection.Send("main", new MessageType
-                {
-                    Msg = "Heyy"
-                });
+                        Host = "localhost",
+                        Port = 80,
+                        User = "DemoServer",
+                        Key = "DemoServer"
+                    }
+                }
             });
 
             server.Run();
 
-            Logger.Success("Server started at port 80");
-
-            //System.Threading.Thread.Sleep(500);
-
-            Logger.Info("Connecting to server via client");
-
-            SocketClient client = new SocketClient(new SocketClientSettings
-            {
-                Port = 80
-            });
-
-            client.OnOpen(() =>
-            {
-                Logger.Info("[ Client ] Connected to server");
-                client.Send("main", new MessageType
-                {
-                    Msg = "Hello new service"
-                });
-            });
-
-            client.OnMessage("main", (msg) =>
-            {
-                MessageType message = JsonHandler.Parse<MessageType>(msg);
-                Logger.Info("[ Client ] Message: " + message.Msg);
-            });
-
-            client.Run();
-
-            Logger.Info("Done with actions");
+            Logger.Success("Server started at port 80");            
         }
 
         public static void DoException(SocketServer server)
