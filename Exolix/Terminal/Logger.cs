@@ -17,7 +17,7 @@ namespace Exolix.Terminal
 
         public static void Info(string message)
         {
-            PrintLineDynamic(" ·".Pastel("#60cdff") + " " + message);
+            PrintLineDynamic(" · [ Info ]".Pastel("#60cdff") + " " + message);
         }
 
         public static void PrintDynamic(string stdOutRaw)
@@ -33,17 +33,17 @@ namespace Exolix.Terminal
 
         public static void Success(string message)
         {
-            PrintLineDynamic(" ·".Pastel("#50ffab") + " " + message);
+            PrintLineDynamic(" · [ Success ]".Pastel("#50ffab") + " " + message);
         }
 
         public static void Error(string message)
         {
-            PrintLineDynamic(" ·".Pastel("#ff5555") + " " + message);
+            PrintLineDynamic(" · [ Error ]".Pastel("#ff5555") + " " + message);
         }
 
         public static void Warning(string message)
         {
-            PrintLineDynamic(" ·".Pastel("#ffff55") + " " + message);
+            PrintLineDynamic(" · [ Warning ]".Pastel("#ffff55") + " " + message);
         }
 
         public static void PrintLineDynamic(string stdOutText)

@@ -23,7 +23,7 @@ namespace ExolixTests
 
         public static void Main(string[] args)
         {
-            Animation.Start("Hosting new server");
+            Logger.Info("Starting API server");
             SocketServer server = new SocketServer(new SocketServerSettings
             {
                 Port = 80
@@ -55,11 +55,7 @@ namespace ExolixTests
             });
 
             server.Run();
-            Animation.Stop();
-
-            Animation.Start("a");
-
-            Animation.Stop("e");
+            Logger.Success("Server started at port 80");
         }
     }
 
