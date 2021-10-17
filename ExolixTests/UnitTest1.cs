@@ -26,44 +26,28 @@ namespace ExolixTests
 
         public static void Main(string[] args)
         {
-            Logger.PrintLineDynamic("Exolix".Pastel("#60cdff") + " Scratch | Socket Server".Pastel("#ffffff"));
-            Logger.PrintLineDynamic("───────────────────────────────────────".Pastel("#555555"));
+            Animation.Start("Connecting to Ethermine with query".Pastel("#999999") + " host=ethermine.net port=5555 protocol=TCP".Pastel("#ffffff"));
+            System.Threading.Thread.Sleep(500);
 
-            SocketServer server = new SocketServer();
+            Animation.Stop("Successfully conected to Ethermine server");
+            Animation.Start("Authenticating client tokens");
 
-            server.OnOpen((conn) =>
+            System.Threading.Thread.Sleep(500);
+            Animation.Stop("All tokens have been accepted by Ethermine");
+
+            Animation.Start("Checking system block handlers");
+            System.Threading.Thread.Sleep(500);
+
+            Animation.Stop("Block handlers are ready");
+
+            while (true)
             {
-                Logger.PrintLineDynamic("[Test] New connection!");
+                System.Threading.Thread.Sleep(1000);
+                Animation.Start("Looking for block");
+                System.Threading.Thread.Sleep(1000);
 
-                conn.OnMessage("max", (msg) =>
-                {
-                    DemoMessage message = JsonHandler.Parse<DemoMessage>(msg);
-                    Logger.PrintLineDynamic($"[Test] New message! Message = {message.Message}");
-                });
-            });
-
-            Animation.Start("Loading the ISS", new AnimationSettings());
-
-            System.Threading.Thread.Sleep(300);
-            Animation.Stop("Failed to load the ISS", "error");
-
-            Animation.Start("Loading the ISS", new AnimationSettings());
-
-            System.Threading.Thread.Sleep(1000);
-            Animation.Stop("Failed to load the ISS", "warning");
-
-            Animation.Start("Loading the ISS", new AnimationSettings());
-
-            System.Threading.Thread.Sleep(1000);
-            Animation.Stop("Successfuly loaded the ISS", "success");
-            Animation.Start("Loading the ISS", new AnimationSettings());
-
-            System.Threading.Thread.Sleep(1000);
-            Animation.Stop("Failed to load the ISS", "error");
-
-            //server.Run();
-
-            Logger.AppDone();
+                Animation.Stop("Finished mining through block");
+            }
         }
     }
 

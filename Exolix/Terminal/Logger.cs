@@ -35,12 +35,10 @@ namespace Exolix.Terminal
             PrintDynamic(stdOutText + "\n");
         }
 
-        public static void AppDone()
+        public static void AppDone(string toAction = "exit")
         {
-            Logger.PrintLineDynamic($" {"Press".Pastel("#999999")} {"ENTER".Pastel("#ffffff")} {"to exit".Pastel("#999999")}");
+            Logger.PrintLineDynamic($" {"Press".Pastel("#999999")} {"ENTER".Pastel("#ffffff")} {$"to {toAction}".Pastel("#999999")}");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
-
-            Environment.Exit(0);
         }
 
         public static void HideCursor()

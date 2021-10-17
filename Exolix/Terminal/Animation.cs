@@ -35,8 +35,6 @@ namespace Exolix.Terminal
 
         public static void Start(string label, AnimationSettings? settings = null)
         {
-            Logger.HideCursor();
-
             if (settings == null)
             {
                 settings = new AnimationSettings();
@@ -48,6 +46,11 @@ namespace Exolix.Terminal
             Label = label;
 
             if (RenderingThreadInstance == null)
+            {
+                Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
+                RenderingThreadInstance = renderingThread;
+                renderingThread!.Start();
+            } else if (!RenderingThreadInstance.IsAlive)
             {
                 Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
                 RenderingThreadInstance = renderingThread;
@@ -82,7 +85,6 @@ namespace Exolix.Terminal
 
                     RenderCurrentFrame("·".Pastel(prefixHex));
                     Logger.PrintDynamic("\n");
-                    Logger.ShowCursor();
                     return;
                 }
 
