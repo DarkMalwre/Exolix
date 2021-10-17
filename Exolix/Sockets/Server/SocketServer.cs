@@ -85,7 +85,7 @@ namespace Exolix.Sockets.Server
 
             if (Settings.NodeList != null)
             {
-                NodeClusterManager clusterManager = new NodeClusterManager(this, Settings.NodeList);
+                NodeClusterManager clusterManager = new NodeClusterManager(this, Settings.NodeList, Settings);
             }
 
             Logger.KeepAlive(true);

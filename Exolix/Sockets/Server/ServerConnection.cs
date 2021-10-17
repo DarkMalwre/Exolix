@@ -4,6 +4,7 @@ using Pastel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,10 +22,12 @@ namespace Exolix.Sockets.Server
     public class ServerConnection : ConnectionEvents
     {
         public string ID = "";
+        public IPAddress RemoteAddress;
         private CoreServerConnection CoreConnection;
 
         public ServerConnection(CoreServerConnection coreConnection)
         {
+            RemoteAddress = coreConnection.Context.UserEndPoint.Address;
             ID = coreConnection.ID;
             CoreConnection = coreConnection;
         }

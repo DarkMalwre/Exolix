@@ -60,6 +60,15 @@ namespace Exolix.Sockets.Client
                 }
             };
 
+            Socket.OnClose += (sender, e) =>
+            {
+                IsConnected = false;
+                foreach (var eventCallback in OnCloseEvents)
+                {
+                    eventCallback();
+                }
+            };
+
             Socket.OnMessage += (sender, e) =>
             {
                 try
@@ -81,15 +90,19 @@ namespace Exolix.Sockets.Client
                 }
             };
 
-            Socket.Connect();
-            //Socket.Send(JsonHandler.Stringify(new
+            Terminal.Logger.Info("Booting");
+
+            //Socket.OnError += (sender, e) =>
             //{
-            //    Channel = "main",
-            //    Data = JsonHandler.Stringify(new
+            //    Terminal.Logger.Info(e.Message);
+
+            //    foreach (var eventCallback in OnOpenFailEvents)
             //    {
-            //        Msg = "Hey server"
-            //    })
-            //}));
+            //        eventCallback();
+            //    }
+            //};
+
+            Socket.Connect();
         }
 
         public void Run()

@@ -54,7 +54,7 @@ namespace Exolix.Terminal
 
         public static void Warning(string message)
         {
-            PrintLineDynamic(" · [ Warning ]".Pastel("#ffff55") + " " + message);
+            PrintLineDynamic(" · [ Warning ]".Pastel("#ffaa55") + " " + message);
         }
 
         public static void PrintLineDynamic(string stdOutText)
