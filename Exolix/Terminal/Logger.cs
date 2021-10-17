@@ -14,6 +14,7 @@ namespace Exolix.Terminal
     {
         private static bool KeepAliveState = false;
         private static Thread? KeepAliveThreadInstance;
+        private static int KeepAliveRequests = 0;
 
         public static void Info(string message)
         {
@@ -88,16 +89,28 @@ namespace Exolix.Terminal
 
         public static void KeepAlive(bool enabled)
         {
-            KeepAliveState = enabled;
-
             if (enabled)
             {
+                KeepAliveRequests++;
+
                 if (KeepAliveThreadInstance == null || !KeepAliveThreadInstance.IsAlive)
                 {
                     KeepAliveThreadInstance = new Thread(new ThreadStart(KeepAliveThread));
                     KeepAliveThreadInstance.Start();
                 }
             }
+            else
+            {
+                KeepAliveRequests--;
+            }
+
+            if (KeepAliveRequests > 0)
+            {
+                KeepAliveState = true;
+                return;
+            }
+
+            KeepAliveState = false;
         }
     }
 }

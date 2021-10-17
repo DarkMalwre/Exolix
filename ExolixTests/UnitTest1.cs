@@ -6,6 +6,7 @@ using Pastel;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using WebSocketSharp.Server;
 
 namespace ExolixTests
@@ -41,11 +42,49 @@ namespace ExolixTests
                         Port = 80,
                         User = "DemoServer",
                         Key = "DemoServer"
+                    },
+                    new ServerNodeItem
+                    {
+                        Host = "localhost",
+                        Port = 8090,
+                        User = "DemoServer",
+                        Key = "DemoServer"
                     }
                 }
             });
 
+            SocketServer server2 = new SocketServer(new SocketServerSettings
+            {
+                Port = 8090,
+                NodeAuthData = new NodeAuthData
+                {
+                    User = "DemoServer",
+                    Key = "DemoServer"
+                },
+                NodeList = new ServerNodeItem[]
+                {
+                    new ServerNodeItem
+                    {
+                        Host = "localhost",
+                        Port = 80,
+                        User = "DemoServer",
+                        Key = "DemoServer"
+                    },
+                    new ServerNodeItem
+                    {
+                        Host = "localhost",
+                        Port = 8090,
+                        User = "DemoServer",
+                        Key = "DemoServer"
+                    }
+                }
+            });
+
+            server2.Run();
             server.Run();
+
+            Thread.Sleep(1000);
+            server2.Stop();
 
             Logger.Success("Server started at port 80");            
         }

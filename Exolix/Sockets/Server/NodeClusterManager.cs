@@ -50,11 +50,18 @@ namespace Exolix.Sockets.Server
                     });
                 });
 
-                //nodeInstance.OnOpenFail(() =>
-                //{
-                //    Logger.Warning("Failed to connect to server for authentication, The server may still be starting. Trying again");
-                //    nodeInstance.Run();
-                //});
+                nodeInstance.OnClose(() =>
+                {
+                    Logger.Warning("Failed to connect to server for authentication, The server may still be starting. Trying again");
+
+                    try
+                    {
+                        nodeInstance.Run();
+                    } catch (Exception ex)
+                    {
+
+                    }
+                });
 
                 nodeInstance.Run();
             }
