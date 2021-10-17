@@ -26,28 +26,44 @@ namespace ExolixTests
 
         public static void Main(string[] args)
         {
-            Logger.PrintLine("Exolix".Pastel("#60cdff") + " Scratch | Socket Server".Pastel("#ffffff"));
-            Logger.PrintLine("───────────────────────────────────────".Pastel("#555555"));
+            Logger.PrintLineDynamic("Exolix".Pastel("#60cdff") + " Scratch | Socket Server".Pastel("#ffffff"));
+            Logger.PrintLineDynamic("───────────────────────────────────────".Pastel("#555555"));
 
             SocketServer server = new SocketServer();
 
             server.OnOpen((conn) =>
             {
-                Logger.PrintLine("[Test] New connection!");
+                Logger.PrintLineDynamic("[Test] New connection!");
 
                 conn.OnMessage("max", (msg) =>
                 {
                     DemoMessage message = JsonHandler.Parse<DemoMessage>(msg);
-                    Logger.PrintLine($"[Test] New message! Message = {message.Message}");
+                    Logger.PrintLineDynamic($"[Test] New message! Message = {message.Message}");
                 });
             });
 
-            Animation.Start("Loading Some Beans · · ·", new AnimationSettings());
+            Animation.Start("Loading the ISS", new AnimationSettings());
 
-            System.Threading.Thread.Sleep(3000);
-            Animation.Stop("Failed to load the beans", "error");
+            System.Threading.Thread.Sleep(300);
+            Animation.Stop("Failed to load the ISS", "error");
+
+            Animation.Start("Loading the ISS", new AnimationSettings());
+
+            System.Threading.Thread.Sleep(1000);
+            Animation.Stop("Failed to load the ISS", "warning");
+
+            Animation.Start("Loading the ISS", new AnimationSettings());
+
+            System.Threading.Thread.Sleep(1000);
+            Animation.Stop("Successfuly loaded the ISS", "success");
+            Animation.Start("Loading the ISS", new AnimationSettings());
+
+            System.Threading.Thread.Sleep(1000);
+            Animation.Stop("Failed to load the ISS", "error");
 
             //server.Run();
+
+            Logger.AppDone();
         }
     }
 

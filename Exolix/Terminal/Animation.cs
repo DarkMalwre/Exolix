@@ -12,42 +12,47 @@ namespace Exolix.Terminal
         public string? Prefix = "";
 
         public string[]? Frames = { "   ",
-            ".  ".Pastel("#60cdff"),
-            ".. ".Pastel("#60cdff"),
-            "...".Pastel("#60cdff"),
-            " ..".Pastel("#60cdff"),
-            "  .".Pastel("#60cdff")
+            ".  ",
+            ".. ",
+            "...",
+            " ..",
+            "  ."
         };
 
         public int? Interval = 100;
+
+        public string? FrameHexColor = "60cdff";
     }
 
     public class Animation
     {
         private static Thread? RenderingThreadInstance;
         private static AnimationSettings? Settings;
-        private static string State = "processing";
         private static int CurrentFrame = 0;
         private static bool Running = false;
         private static string Label = "";
+        private static string LastOutput = "";
 
         public static void Start(string label, AnimationSettings? settings = null)
         {
+            Logger.HideCursor();
+
             if (settings == null)
             {
                 settings = new AnimationSettings();
             }
 
             Settings = settings;
-            State = "processing";
             Running = true;
             CurrentFrame = 0;
             Label = label;
 
-            Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
-            renderingThread.Start();
-
-            RenderingThreadInstance = renderingThread;
+            if (RenderingThreadInstance == null)
+            {
+                Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
+                RenderingThreadInstance = renderingThread;
+                renderingThread!.Start();
+            }
         }
 
         public static void Stop(string? label = "", string newState = "success")
@@ -62,20 +67,22 @@ namespace Exolix.Terminal
                     }
 
                     Running = false;
-                    string prefixHex = "#60cdff";
+                    string prefixHex = "#60CDFF";
 
                     if (newState == "success")
                     {
-                        prefixHex = "#60cdff";
+                        prefixHex = "#50FFAB";
                     } else if (newState == "error")
                     {
-                        prefixHex = "#ff0055";
-                    } else if (prefixHex == "warning")
+                        prefixHex = "#FF0055";
+                    } else if (newState == "warning")
                     {
                         prefixHex = "#FFA500";
                     }
 
                     RenderCurrentFrame("·".Pastel(prefixHex));
+                    Logger.PrintDynamic("\n");
+                    Logger.ShowCursor();
                     return;
                 }
 
@@ -103,36 +110,29 @@ namespace Exolix.Terminal
 
         public static void RenderCurrentFrame(string? prefixIcon = null)
         {
-            int consoleWith = Console.WindowWidth - Settings!.Frames![CurrentFrame].Length;
-            if (consoleWith < 0)
-            {
-                consoleWith = 0;
-            }
-
-            string outputLabel = Label;
             string suffixSpacing = "";
+            string outputLabel = Label;
 
-            if (outputLabel.Length > consoleWith)
-            {
-                outputLabel = outputLabel.Substring(0, consoleWith);
-            }
-            else
-            {
-                int suffixLength = consoleWith - outputLabel.Length - Settings!.Frames[CurrentFrame].Length;
-                if (suffixLength < 0)
-                {
-                    suffixLength = 0;
-                }
-
-                suffixSpacing = new string(' ', suffixLength);
-            }
+            int consoleWidth = Console.WindowWidth;
 
             if (prefixIcon == null)
             {
-                prefixIcon = Settings!.Frames[CurrentFrame];
+                prefixIcon = Settings!.Frames![CurrentFrame];
             }
 
-            Console.Write($"\r {prefixIcon} {outputLabel}{suffixSpacing}");
+            if (consoleWidth - LastOutput.Length >= 0)
+            {
+                // TODO: Cut off label
+            }
+
+            if ($"{prefixIcon} {outputLabel}".Length < LastOutput.Length) 
+            {
+                int suffixSize = LastOutput.Length - $"{prefixIcon} {outputLabel}".Length;
+                suffixSpacing = new string(' ', suffixSize);
+            }
+
+            Logger.PrintDynamic($"\r {prefixIcon.Pastel("#" + Settings!.FrameHexColor)} {outputLabel}{suffixSpacing}");
+            LastOutput = $"{prefixIcon} {outputLabel}";
         }
     }
 }

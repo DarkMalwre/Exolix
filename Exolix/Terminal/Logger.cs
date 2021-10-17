@@ -1,4 +1,5 @@
 ﻿using Exolix.Developer;
+using Pastel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,9 +30,27 @@ namespace Exolix.Terminal
             Console.Write(stdOutRaw);
         }
 
-        public static void PrintLine(string stdOutText)
+        public static void PrintLineDynamic(string stdOutText)
         {
             PrintDynamic(stdOutText + "\n");
+        }
+
+        public static void AppDone()
+        {
+            Logger.PrintLineDynamic($" {"Press".Pastel("#999999")} {"ENTER".Pastel("#ffffff")} {"to exit".Pastel("#999999")}");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+
+            Environment.Exit(0);
+        }
+
+        public static void HideCursor()
+        {
+            Console.CursorVisible = false;
+        }
+
+        public static void ShowCursor()
+        {
+            Console.CursorVisible = true;
         }
     }
 }
