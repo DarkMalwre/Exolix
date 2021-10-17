@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exolix.Terminal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,22 +8,37 @@ using WebSocketSharp.Server;
 
 namespace Exolix.Sockets.Server
 {
+    public class ServerNodeItem
+    {
+        public string User = "";
+
+        public string Key = "";
+
+        public string Host = "";
+
+        public string? Port = null;
+    }
+
     public class SocketServerSettings
     {
         public string Host = "localhost";
 
-        public int? Port = 80;
+        public int? Port = null;
 
         public bool Secure = false;
+
+        public ServerNodeItem[]? NodeList = null;
     }
 
     public class SocketServer : Events
     {
-        public SocketServerSettings? Settings;
+        private SocketServerSettings? Settings;
+        private bool Running = false;
+        private WebSocketServer? Server = null;
 
         public SocketServer(SocketServerSettings? settings = null)
         {
-           if (settings != null)
+           if (settings == null)
            {
                 Settings = new SocketServerSettings();
                 return;
@@ -33,8 +49,6 @@ namespace Exolix.Sockets.Server
 
         private void RunThreadLogic()
         {
-            Console.WriteLine(Settings.ToString());
-
             string prefix = "ws://";
             if (Settings!.Secure)
             {
@@ -50,6 +64,7 @@ namespace Exolix.Sockets.Server
             string serverUrl = prefix + Settings!.Host + suffix;
 
             var server = new WebSocketServer(serverUrl);
+            Server = server;
             server.AddWebSocketService("/", () => {
                 CoreServerConnection coreConnection = new CoreServerConnection();
                 coreConnection.Server = this;
@@ -58,13 +73,31 @@ namespace Exolix.Sockets.Server
             });
 
             server.Start();
-            Console.ReadKey(true);
+            Logger.KeepAlive(true);
         }
 
         public void Run()
         {
+            if (Running && Server != null && Server.IsListening)
+            {
+                throw new Exception("Server is already running");
+            }
+
+            Running = true;
             Thread thread = new Thread(new ThreadStart(RunThreadLogic));
             thread.Start();
+        }
+
+        public void Stop()
+        {
+            if (!Running && (Server == null || Server != null && !Server.IsListening))
+            {
+                throw new Exception("Server is not running");
+            }
+
+            Running = false;
+            Server?.Stop();
+            Logger.KeepAlive(false);
         }
     }
 

@@ -9,12 +9,9 @@ using WebSocketSharp.Server;
 
 namespace ExolixTests
 {
-    public interface Typess
+    public class MessageType
     {
-        string Msg
-        {
-            get;
-        }
+        public string? Msg = "No Message Provided";
     }
 
     public class Tests
@@ -27,7 +24,21 @@ namespace ExolixTests
         public static void Main(string[] args)
         {
             Animation.Start("Hosting new server");
-            SocketServer server = new SocketServer();
+            SocketServer server = new SocketServer(new SocketServerSettings
+            {
+                Port = 80
+            });
+
+            server.OnOpen((connection) =>
+            {
+                Logger.Info(" New Connection");
+
+                connection.OnMessage("main", (msg) =>
+                {
+                    MessageType message = JsonHandler.Parse<MessageType>(msg);
+                    Logger.Info(" Message: " + message.Msg);
+                });
+            });
 
             server.Run();
             Animation.Stop();

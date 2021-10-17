@@ -12,6 +12,9 @@ namespace Exolix.Terminal
 {
     public class Logger
     {
+        private static bool KeepAliveState = false;
+        private static Thread? KeepAliveThreadInstance;
+
         public static void Info(string text)
         {
             Console.WriteLine(text);
@@ -19,8 +22,6 @@ namespace Exolix.Terminal
 
         public static void PrintDynamic(string stdOutRaw)
         {
-            
-
             if (States.GetDebugMode())
             {
                 Debug.Write(stdOutRaw);
@@ -49,6 +50,28 @@ namespace Exolix.Terminal
         public static void ShowCursor()
         {
             Console.CursorVisible = true;
+        }
+
+        private static void KeepAliveThread()
+        {
+            do
+            {
+                Thread.Sleep(100);
+            } while (KeepAliveState);
+        }
+
+        public static void KeepAlive(bool enabled)
+        {
+            KeepAliveState = enabled;
+
+            if (enabled)
+            {
+                if (KeepAliveThreadInstance == null || !KeepAliveThreadInstance.IsAlive)
+                {
+                    KeepAliveThreadInstance = new Thread(new ThreadStart(KeepAliveThread));
+                    KeepAliveThreadInstance.Start();
+                }
+            }
         }
     }
 }
