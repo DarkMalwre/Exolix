@@ -7,7 +7,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using WebSocketSharp.Server;
+using WebSocketSharp.NetCore.Server;
 
 namespace ExolixTests
 {
@@ -83,8 +83,11 @@ namespace ExolixTests
             server2.Run();
             server.Run();
 
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             server2.Stop();
+
+            Thread.Sleep(1000);
+            server2.Run();
 
             Logger.Success("Server started at port 80");            
         }
@@ -104,18 +107,6 @@ namespace ExolixTests
             {
                 Logger.ErrorException(ex);
             }
-        }
-    }
-
-    public class HandleService: WebSocketBehavior {
-        protected override void OnMessage(WebSocketSharp.MessageEventArgs e)
-        {
-            Logger.PrintDynamic("MSG: " + e.Data);
-        }
-
-        protected override void OnOpen()
-        {
-            Logger.PrintDynamic("New Conn: " + Context.QueryString["name"]);
         }
     }
 }

@@ -9,7 +9,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WebSocketSharp;
-using WebSocketSharp.Server;
+using WebSocketSharp.NetCore;
+using WebSocketSharp.NetCore.Server;
 
 namespace Exolix.Sockets.Server
 {

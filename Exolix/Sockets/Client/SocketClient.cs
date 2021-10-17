@@ -3,9 +3,10 @@ using Exolix.Sockets.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using WebSocketSharp;
+using WebSocketSharp.NetCore;
 
 namespace Exolix.Sockets.Client
 {
@@ -50,6 +51,7 @@ namespace Exolix.Sockets.Client
             }
 
             string serverUrl = prefix + Settings!.Host + suffix;
+
             Socket = new WebSocket(serverUrl);
 
             Socket.OnOpen += (sender, e) =>
@@ -89,8 +91,6 @@ namespace Exolix.Sockets.Client
                     Terminal.Logger.ErrorException(ex);
                 }
             };
-
-            Terminal.Logger.Info("Booting");
 
             //Socket.OnError += (sender, e) =>
             //{

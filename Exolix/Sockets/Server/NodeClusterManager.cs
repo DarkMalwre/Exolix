@@ -4,6 +4,7 @@ using Exolix.Terminal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,36 +35,81 @@ namespace Exolix.Sockets.Server
 
             foreach (var node in nodeList)
             {
-                Logger.Info("[ Queue Connect ] " + node.Host + ":" + node.Port);
-                SocketClient nodeInstance = new SocketClient(new SocketClientSettings
+                new Thread(new ThreadStart(() =>
                 {
-                    Host = node.Host,
-                    Port = node.Port,
-                });
-
-                nodeInstance.OnOpen(() =>
-                {
-                    nodeInstance.Send<NodeAuthData>("_cluster:setup", new NodeAuthData
+                    Logger.Info("[ Queue Connect ] " + node.Host + ":" + node.Port);
+                    SocketClient nodeInstance = new SocketClient(new SocketClientSettings
                     {
-                        User = node.User,
-                        Key = node.Key
+                        Host = node.Host,
+                        Port = node.Port,
                     });
-                });
 
-                nodeInstance.OnClose(() =>
-                {
-                    Logger.Warning("Failed to connect to server for authentication, The server may still be starting. Trying again");
+                    //bool tryPingTesting = false;
+                    //bool pingable = false;
+                    //Ping? pinger = null;
 
-                    try
+                    //new Thread(new ThreadStart(() =>
+                    //{
+                    //    do
+                    //    {
+                    //        try
+                    //        {
+                    //            pinger = new Ping();
+                    //            PingReply reply = pinger.Send(node.Host + (node.Port != null ? ":" + node.Port : ""));
+                    //            pingable = reply.Status == IPStatus.Success;
+                    //        }
+                    //        catch (Exception ) { }
+                    //        finally
+                    //        {
+                    //            if (pinger != null)
+                    //            {
+                    //                pinger.Dispose();
+                    //            }
+                    //        }
+
+                    //        if (pingable)
+                    //        {
+                    //            Logger.Info("This host is good " + node.Host + ":" + node.Port);
+                    //            tryPingTesting = false;
+                    //        }
+                    //        else
+                    //        {
+                    //            Logger.Warning("Failed to ping " + node.Host + ":" + node.Port);
+                    //        }
+
+                    //        Thread.Sleep(500);
+                    //    } while (tryPingTesting);
+                    //})).Start();
+
+                    bool connected = false;
+
+                    nodeInstance.OnOpen(() =>
                     {
-                        nodeInstance.Run();
-                    } catch (Exception ex)
+                        connected = true;
+                        nodeInstance.Send<NodeAuthData>("_cluster:setup", new NodeAuthData
+                        {
+                            User = node.User,
+                            Key = node.Key
+                        });
+                    });
+
+                    nodeInstance.OnClose(() =>
                     {
+                        if (connected)
+                        {
+                            Logger.Error("An initialized node has broken away");
+                            return;
+                        }
 
-                    }
-                });
+                        try
+                        {
+                            nodeInstance.Run();
+                        } 
+                        catch (Exception) { }
+                    });
 
-                nodeInstance.Run();
+                    nodeInstance.Run();
+                })).Start();
             }
         }
     }
