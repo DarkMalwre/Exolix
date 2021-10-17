@@ -48,7 +48,7 @@ namespace Exolix.Terminal
 
             foreach (var stack in stFrames)
             {
-                Error("    " + stack.ToString().Replace('\n', ' '));
+                Error("    " + stack.ToString().TrimEnd('\n'));
             }
         }
 
