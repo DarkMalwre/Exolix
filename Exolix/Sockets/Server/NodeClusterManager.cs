@@ -36,7 +36,6 @@ namespace Exolix.Sockets.Server
 			{
 				new Thread(new ThreadStart(() =>
 				{
-					Logger.Info("[ Queue Connect ] " + node.Host + ":" + node.Port);
 					SocketClient nodeInstance = new SocketClient(new SocketClientSettings
 					{
 						Host = node.Host,
