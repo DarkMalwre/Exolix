@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace Exolix.Json
 {
-    public class JsonHandler
-    {
-        public static DocumentType Parse<DocumentType>(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<DocumentType>(jsonString, new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.Auto
-            })!;
-        }
+	public class JsonHandler
+	{
+		public static DocumentType Parse<DocumentType>(string jsonString)
+		{
+			return JsonConvert.DeserializeObject<DocumentType>(jsonString, new JsonSerializerSettings()
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			})!;
+		}
 
-        public static string Stringify<DocumentType>(DocumentType json)
-        {
-            return JsonConvert.SerializeObject(json);
-        }
-    }
+		public static string Stringify<DocumentType>(DocumentType json)
+		{
+			return JsonConvert.SerializeObject(json);
+		}
+	}
 }

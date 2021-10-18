@@ -10,71 +10,62 @@ using System.Threading.Tasks;
 
 namespace Exolix.Sockets.Server
 {
-    public class NodeClusterManager
-    {
-        public List<SocketClient> Nodes = new List<SocketClient>();
+	public class NodeClusterManager
+	{
+		public List<SocketClient> Nodes = new List<SocketClient>();
 
-        public NodeClusterManager(SocketServer server, ServerNodeItem[] nodeList, SocketServerSettings serverSettings)
-        {
-            server.OnOpen((nodeConnection) =>
-            {
-                nodeConnection.OnMessage("_cluster:setup", (rawMessage) =>
-                {
-                    NodeAuthData authData = JsonHandler.Parse<NodeAuthData>(rawMessage);
+		public NodeClusterManager(SocketServer server, ServerNodeItem[] nodeList, SocketServerSettings serverSettings)
+		{
+			server.OnOpen((nodeConnection) =>
+			{
+				nodeConnection.OnMessage("_cluster:setup", (rawMessage) =>
+				{
+					NodeAuthData authData = JsonHandler.Parse<NodeAuthData>(rawMessage);
 
-                    if (serverSettings.NodeAuthData != null && serverSettings.NodeAuthData.User == authData.User && serverSettings.NodeAuthData.Key == authData.Key)
-                    {
-                        Logger.Success("Authenticated new connection");
-                        return;
-                    }
+					if (serverSettings.NodeAuthData != null && serverSettings.NodeAuthData.User == authData.User && serverSettings.NodeAuthData.Key == authData.Key)
+					{
+						Logger.Success("Authenticated new connection");
+						return;
+					}
 
-                    nodeConnection.Close();
-                });
-            });
+					nodeConnection.Close();
+				});
+			});
 
-            foreach (var node in nodeList)
-            {
-                new Thread(new ThreadStart(() =>
-                {
-                    Logger.Info("[ Queue Connect ] " + node.Host + ":" + node.Port);
-                    SocketClient nodeInstance = new SocketClient(new SocketClientSettings
-                    {
-                        Host = node.Host,
-                        Port = node.Port,
-                    });
+			foreach (var node in nodeList)
+			{
+				new Thread(new ThreadStart(() =>
+				{
+					Logger.Info("[ Queue Connect ] " + node.Host + ":" + node.Port);
+					SocketClient nodeInstance = new SocketClient(new SocketClientSettings
+					{
+						Host = node.Host,
+						Port = node.Port,
+					});
 
-                    Nodes.Add(nodeInstance);
+					Nodes.Add(nodeInstance);
 
-                    bool connected = false;
+					nodeInstance.OnOpen(() =>
+					{
+						nodeInstance.Send<NodeAuthData>("_cluster:setup", new NodeAuthData
+						{
+							User = node.User,
+							Key = node.Key
+						});
+					});
 
-                    nodeInstance.OnOpen(() =>
-                    {
-                        connected = true;
-                        nodeInstance.Send<NodeAuthData>("_cluster:setup", new NodeAuthData
-                        {
-                            User = node.User,
-                            Key = node.Key
-                        });
-                    });
+					nodeInstance.OnClose(() =>
+					{
+						try
+						{
+							nodeInstance.Run();
+						}
+						catch (Exception) { }
+					});
 
-                    nodeInstance.OnClose(() =>
-                    {
-                        if (connected)
-                        {
-                            Logger.Error("An initialized node has broken away");
-                            return;
-                        }
-
-                        try
-                        {
-                            nodeInstance.Run();
-                        } 
-                        catch (Exception) { }
-                    });
-
-                    nodeInstance.Run();
-                })).Start();
-            }
-        }
-    }
+					nodeInstance.Run();
+				})).Start();
+			}
+		}
+	}
 }

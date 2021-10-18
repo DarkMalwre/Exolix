@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Exolix.Sockets.Server
 {
-    public class ServerEvents
-    {
-        public List<Action<ServerConnection>> OnOpenEvents = new List<Action<ServerConnection>>();
+	public class ServerEvents
+	{
+		public List<Action<ServerConnection>> OnOpenEvents = new List<Action<ServerConnection>>();
 
-        public void OnOpen(Action<ServerConnection> handler) {
-            OnOpenEvents.Add(handler);
-        }
-    }
+		public void OnOpen(Action<ServerConnection> handler) {
+			OnOpenEvents.Add(handler);
+		}
+	}
 }
