@@ -23,17 +23,21 @@ namespace Exolix.Sockets.Client
     {
         private WebSocket? Socket;
         private SocketClientSettings Settings;
-        private bool IsConnected = false;
+        public bool IsConnected = false;
+        public string Name;
 
         public SocketClient(SocketClientSettings? settings = null)
         {
             if (settings == null)
             {
                 Settings = new SocketClientSettings();
-                return;
+            }
+            else
+            {
+                Settings = settings;
             }
 
-            Settings = settings;
+            Name = Settings.Host + (Settings.Port != null ? ":" + Settings.Port : "");
         }
 
         private void RunThreadLogic()

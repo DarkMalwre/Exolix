@@ -48,6 +48,11 @@ namespace Exolix.Sockets.Server
                 throw new Exception(ex.ToString());
             }
         }
+
+        public void Close()
+        {
+            CoreConnection.CloseSession();
+        }
     }
 
     public class ConnectionMessage
@@ -110,6 +115,11 @@ namespace Exolix.Sockets.Server
         public void SendMessage(string message)
         {
             Send(message);
+        }
+
+        public void CloseSession()
+        {
+            Sessions.CloseSession(ID);
         }
     }
 }

@@ -12,16 +12,15 @@ namespace Exolix.Sockets.Server
 {
     public class NodeClusterManager
     {
+        public List<SocketClient> Nodes = new List<SocketClient>();
+
         public NodeClusterManager(SocketServer server, ServerNodeItem[] nodeList, SocketServerSettings serverSettings)
         {
             server.OnOpen((nodeConnection) =>
             {
-                Logger.Info("New Connection: " + nodeConnection.RemoteAddress);
-
                 nodeConnection.OnMessage("_cluster:setup", (rawMessage) =>
                 {
                     NodeAuthData authData = JsonHandler.Parse<NodeAuthData>(rawMessage);
-                    Logger.Info($"[ Query Authenticate ] User={authData.User ?? "NoUserProvided"} key={authData.Key ?? "NoKeyProvided"}");
 
                     if (serverSettings.NodeAuthData != null && serverSettings.NodeAuthData.User == authData.User && serverSettings.NodeAuthData.Key == authData.Key)
                     {
@@ -29,7 +28,7 @@ namespace Exolix.Sockets.Server
                         return;
                     }
 
-                    Logger.Warning("A possible cluster node failed to authenticate");
+                    nodeConnection.Close();
                 });
             });
 
@@ -44,42 +43,7 @@ namespace Exolix.Sockets.Server
                         Port = node.Port,
                     });
 
-                    //bool tryPingTesting = false;
-                    //bool pingable = false;
-                    //Ping? pinger = null;
-
-                    //new Thread(new ThreadStart(() =>
-                    //{
-                    //    do
-                    //    {
-                    //        try
-                    //        {
-                    //            pinger = new Ping();
-                    //            PingReply reply = pinger.Send(node.Host + (node.Port != null ? ":" + node.Port : ""));
-                    //            pingable = reply.Status == IPStatus.Success;
-                    //        }
-                    //        catch (Exception ) { }
-                    //        finally
-                    //        {
-                    //            if (pinger != null)
-                    //            {
-                    //                pinger.Dispose();
-                    //            }
-                    //        }
-
-                    //        if (pingable)
-                    //        {
-                    //            Logger.Info("This host is good " + node.Host + ":" + node.Port);
-                    //            tryPingTesting = false;
-                    //        }
-                    //        else
-                    //        {
-                    //            Logger.Warning("Failed to ping " + node.Host + ":" + node.Port);
-                    //        }
-
-                    //        Thread.Sleep(500);
-                    //    } while (tryPingTesting);
-                    //})).Start();
+                    Nodes.Add(nodeInstance);
 
                     bool connected = false;
 
