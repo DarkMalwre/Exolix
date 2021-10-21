@@ -1,4 +1,4 @@
-# Exolix
+![Exolix Banner](https://github.com/AxeriDev/Exolix/blob/master/ExolixBanner.png?raw=true)
 C# Real-Time Framework
 
 # Why
