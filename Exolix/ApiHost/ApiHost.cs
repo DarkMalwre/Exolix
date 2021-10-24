@@ -22,7 +22,7 @@ namespace Exolix.ApiHost
     {
 		public string Key1 = "";
 		public string Key2 = "";
-		public string Host = "localhost";
+		public string Host = "0.0.0.0";
 		public int? Port = null;
     }
 
@@ -46,6 +46,9 @@ namespace Exolix.ApiHost
 		/// </summary>
 		public string ListeningAddress = "Server Not Connected";
 
+		/// <summary>
+		/// List of all on ready event actions
+		/// </summary>
 		private List<Action> OnReadyEvents = new List<Action>();
 
 		/// <summary>
@@ -63,6 +66,34 @@ namespace Exolix.ApiHost
 			Settings = settings;
 		}
 
+		/// <summary>
+		/// Build an address to connect to a cluster connection
+		/// </summary>
+		/// <param name="host">Peer node host</param>
+		/// <param name="port">Peer node port</param>
+		/// <param name="secure">Is the peer node using a secure protocol</param>
+		/// <returns>Connect address</returns>
+		private string BuildClusterConnectUrl(string host, int? port, bool secure = false)
+        {
+			string protocol = "ws://";
+			if (secure)
+			{
+				protocol = "wss://";
+			}
+
+			string portSuffix = "";
+			if (port != null)
+			{
+				portSuffix = ":" + port;
+			}
+
+			return protocol + host + portSuffix;
+		}
+
+		/// <summary>
+		/// Build an address from settings for hosting the server
+		/// </summary>
+		/// <returns>Connection address</returns>
 		private string BuildConnectUrl()
 		{
 			string protocol = "ws://";
@@ -77,7 +108,7 @@ namespace Exolix.ApiHost
 				portSuffix = ":" + Settings.Port;
 			}
 			
-			return protocol + portSuffix;
+			return protocol + Settings.Host + portSuffix;
 		}
 
 		/// <summary>
@@ -93,5 +124,25 @@ namespace Exolix.ApiHost
 				socket.OnMessage = message => socket.Send(message);
 			});
 		}
+
+		/// <summary>
+		/// Trigger a callback when the server is ready for responding to client commands
+		/// </summary>
+		/// <param name="action">Callback</param>
+		public void OnReady(Action action)
+        {
+			OnReadyEvents.Add(action);
+        }
+
+		/// <summary>
+		/// Trigger all on ready events
+		/// </summary>
+		private void TriggerOnReady()
+        {
+			foreach (var action in OnReadyEvents)
+            {
+				action();
+            }
+        }
 	}
 }
