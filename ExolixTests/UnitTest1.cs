@@ -10,5 +10,12 @@ public class App
 		{
 			Port = 8080
 		});
+
+		api.OnReady(() =>
+		{
+			Animation.Stop("Boot container ready");
+		});
+
+		api.Run();
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Fleck;
+﻿using Exolix.Terminal;
+using Fleck;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +14,18 @@ namespace Exolix.ApiHost
 	}
 
 	public class ApiClusterAuth
-    {
+	{
 		public string Key1 = "";
 		public string Key2 = "";
-    }
+	}
 
 	public class ApiPeerNode
-    {
+	{
 		public string Key1 = "";
 		public string Key2 = "";
 		public string Host = "0.0.0.0";
 		public int? Port = null;
-    }
+	}
 
 	public class ApiHostSettings
 	{
@@ -74,7 +75,7 @@ namespace Exolix.ApiHost
 		/// <param name="secure">Is the peer node using a secure protocol</param>
 		/// <returns>Connect address</returns>
 		private string BuildClusterConnectUrl(string host, int? port, bool secure = false)
-        {
+		{
 			string protocol = "ws://";
 			if (secure)
 			{
@@ -116,7 +117,17 @@ namespace Exolix.ApiHost
 		/// </summary>
 		public void Run()
 		{
-			var server = new WebSocketServer(BuildConnectUrl());
+			Logger.KeepAlive(true);
+			ListeningAddress = BuildConnectUrl();
+
+			var server = new WebSocketServer(ListeningAddress);
+			FleckLog.LogAction = (level, message, ex) => {
+				if (message == "Server started at " + ListeningAddress + " (actual port " + Settings.Port + ")")
+                {
+					TriggerOnReady();
+                }
+			};
+
 			server.Start(socket =>
 			{
 				socket.OnOpen = () => Console.WriteLine("Open!");
@@ -130,19 +141,19 @@ namespace Exolix.ApiHost
 		/// </summary>
 		/// <param name="action">Callback</param>
 		public void OnReady(Action action)
-        {
+		{
 			OnReadyEvents.Add(action);
-        }
+		}
 
 		/// <summary>
 		/// Trigger all on ready events
 		/// </summary>
 		private void TriggerOnReady()
-        {
+		{
 			foreach (var action in OnReadyEvents)
-            {
-				action();
-            }
-        }
+			{
+				new Thread(new ThreadStart(action)).Start();
+			}
+		}
 	}
 }

@@ -59,6 +59,11 @@ namespace Exolix.Terminal
 			}
 		}
 
+		public static bool GetRunningState()
+        {
+			return Running;
+        }
+
 		public static void Stop(string? label = null, string newState = "success")
 		{
 			if (newState == "success" || newState == "processing" || newState == "error" || newState == "warning")

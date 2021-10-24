@@ -23,6 +23,11 @@ namespace Exolix.Terminal
 
 		public static void PrintDynamic(string stdOutRaw)
 		{
+			if (Animation.GetRunningState())
+            {
+				return;
+            }
+
 			if (States.GetDebugMode())
 			{
 				Debug.Write(stdOutRaw);
