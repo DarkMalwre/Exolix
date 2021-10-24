@@ -18,17 +18,25 @@ public class App
 
 		api.OnOpen((connection) =>
 		{
-			Logger.Info("[" + connection.RemoteAddress + "] Opened");
+			api.Emit("channel", new MsgType
+			{
+				Msg = "[System] New User Connected { Total = " + api.ConnectedClients + ", IP = " + connection.RemoteAddress + " }"
+			});
+			Logger.Info("[" + connection.RemoteAddress + "] Opened Total = " + api.ConnectedClients);
 
 			connection.OnClose((connection) =>
 			{
-				Logger.Info("Closed");
+				Logger.Info("Closed Total = " + api.ConnectedClients);
+				api.Emit("channel", new MsgType
+				{
+					Msg = "[System] User Disconnected { Total = " + api.ConnectedClients + ", IP = " + connection.RemoteAddress + " }"
+				});
 			});
 
 			connection.OnMessageGlobal((channel, message) =>
 			{
 				var nmsg = JsonHandler.Parse<MsgType>(message);
-				connection.Send("Main", new MsgType
+				api.Emit("Main", new MsgType
 				{
 					Msg = nmsg.Msg,
 				});

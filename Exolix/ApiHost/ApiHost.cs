@@ -54,6 +54,8 @@ namespace Exolix.ApiHost
 		/// </summary>
 		private List<ApiConnection> ApiConnections = new List<ApiConnection>();
 
+		public int ConnectedClients = 0;
+
 		/// <summary>
 		/// Address were server has been opened at
 		/// </summary>
@@ -164,11 +166,37 @@ namespace Exolix.ApiHost
 		/// <param name="message">Message object</param>
 		public void Emit<MessageType>(string channel, MessageType message)
         {
+			CheckAliveConnections();
 			var connections = GetAllConnections();
 
-			foreach (var connection in connections)
+			try
+			{
+				foreach (var connection in connections)
+				{
+					connection.Send<MessageType>(channel, message);
+				}
+			} catch (Exception)
             {
-				connection.Send<MessageType>(channel, message);
+				Emit(channel, message);
+            }
+        }
+
+		private void CheckAliveConnections()
+        {
+			try
+            {
+				var connections = GetAllConnections();
+				foreach (var connection in connections)
+				{
+					if (connection != null && !connection.Alive)
+					{
+						ApiConnections.Remove(connection);
+						ConnectedClients = ApiConnections.Count;
+					}
+				}
+			} catch (Exception)
+            {
+				CheckAliveConnections();
             }
         }
 
@@ -188,33 +216,47 @@ namespace Exolix.ApiHost
 				}
 			};
 
-			server.Start(socket =>
-			{
-				var apiConnection = new ApiConnection(socket);
-
-				socket.OnOpen = () =>
-                {
-					ApiConnections.Add(apiConnection);
-					TriggerOnOpen(apiConnection);
-				};
-
-                socket.OnClose = () => apiConnection.TriggerOnClose();
-
-				socket.OnMessage = (message) =>
+			server.Start((socket) =>
+            {
+				new Thread(new ThreadStart(() =>
 				{
-					try
-                    {
-						var parsedMessageContainer = JsonHandler.Parse<ApiMessageContainer>(message);
-						string channel = parsedMessageContainer.Channel;
-						string data = parsedMessageContainer.Data;
+					var apiConnection = new ApiConnection(socket);
 
-						if (channel != null && channel is string && data != null && data is string)
-                        {
-							apiConnection.TriggerOnMessage(channel, data);
-							apiConnection.TriggerOnMessageGlobal(channel, data);
-                        }
-                    } catch (Exception) { }
-				};
+					socket.OnOpen = () =>
+					{
+						ApiConnections.Add(apiConnection);
+						ConnectedClients = ApiConnections.Count;
+						TriggerOnOpen(apiConnection);
+
+						CheckAliveConnections();
+					};
+
+					socket.OnClose = () =>
+					{
+						RemoveConnection(apiConnection.Identifier);
+						ConnectedClients = ApiConnections.Count;
+						apiConnection.TriggerOnClose();
+
+						CheckAliveConnections();
+					};
+
+					socket.OnMessage = (message) =>
+					{
+						try
+						{
+							var parsedMessageContainer = JsonHandler.Parse<ApiMessageContainer>(message);
+							string channel = parsedMessageContainer.Channel;
+							string data = parsedMessageContainer.Data;
+
+							if (channel != null && channel is string && data != null && data is string)
+							{
+								apiConnection.TriggerOnMessage(channel, data);
+								apiConnection.TriggerOnMessageGlobal(channel, data);
+							}
+						}
+						catch (Exception) { }
+					};
+				})).Start();
 			});
 		}
 
@@ -237,6 +279,18 @@ namespace Exolix.ApiHost
 				new Thread(new ThreadStart(action)).Start();
 			}
 		}
+
+		public void RemoveConnection(string Identifer)
+        {
+			foreach (var connection in ApiConnections)
+            {
+				if (connection.Identifier == Identifer)
+                {
+					ApiConnections.Remove(connection);
+					break;
+                }
+            }
+        }
 
 		public void OnOpen(Action<ApiConnection> action)
 		{

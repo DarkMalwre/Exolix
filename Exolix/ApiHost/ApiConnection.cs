@@ -16,9 +16,11 @@ namespace Exolix.ApiHost
         private List<Action<ApiConnection>> OnCloseEvents = new List<Action<ApiConnection>>();
 		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string, Action<string>>>();
 		private List<Action<string, string>> OnMessageGlobalEvents = new List<Action<string, string>>();
+		public bool Alive = false;
 
 		public ApiConnection(IWebSocketConnection connection)
 		{
+			Alive = connection.IsAvailable;
 			Identifier = connection.ConnectionInfo.Id.ToString();
 			RemoteAddress = connection.ConnectionInfo.ClientIpAddress;
 			RealConnection = connection;
@@ -26,14 +28,19 @@ namespace Exolix.ApiHost
 
 		public void Send<MessageType>(string channel, MessageType message)
         {
-			var stringMessageData = JsonHandler.Stringify<MessageType>(message);
-			var fullMessageString = JsonHandler.Stringify(new
-			{
-				Channel = channel,
-				Data = stringMessageData
-			});
+			CheckAliveState();
 
-			RealConnection.Send(fullMessageString);
+			try
+            {
+				var stringMessageData = JsonHandler.Stringify<MessageType>(message);
+				var fullMessageString = JsonHandler.Stringify(new
+				{
+					Channel = channel,
+					Data = stringMessageData
+				});
+
+				RealConnection.Send(fullMessageString);
+			} catch (Exception) { }
         }
 
 		public void OnClose(Action<ApiConnection> action)
@@ -41,11 +48,18 @@ namespace Exolix.ApiHost
 			OnCloseEvents.Add(action);
 		}
 
+		public void CheckAliveState()
+        {
+			Alive = RealConnection.IsAvailable;
+			Console.WriteLine("ALV: " + Alive);
+		}
+
 		/// <summary>
 		/// Trigger all on close events
 		/// </summary>
 		public void TriggerOnClose()
 		{
+			CheckAliveState();
 			foreach (var action in OnCloseEvents)
 			{
 				new Thread(new ThreadStart(() => action(this))).Start();
