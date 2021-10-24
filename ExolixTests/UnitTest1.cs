@@ -19,6 +19,16 @@ public class App
 		api.OnOpen((connection) =>
 		{
 			Logger.Info("Opened");
+
+			connection.OnClose((connection) =>
+			{
+				Logger.Info("Closed");
+			});
+
+			connection.OnMessage((message) =>
+			{
+				Logger.Info("[MSG] " + message);
+			});
 		});
 
 		api.Run();

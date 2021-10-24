@@ -125,16 +125,22 @@ namespace Exolix.ApiHost
 			var server = new WebSocketServer(ListeningAddress);
 			FleckLog.LogAction = (level, message, ex) => {
 				if (message == "Server started at " + ListeningAddress + " (actual port " + Settings.Port + ")")
-                {
+				{
 					TriggerOnReady();
-                }
+				}
 			};
 
 			server.Start(socket =>
 			{
-				socket.OnOpen = () => Console.WriteLine("Open!");
-				socket.OnClose = () => Console.WriteLine("Close!");
-				socket.OnMessage = message => socket.Send(message);
+				var apiConnection = new ApiConnection(socket);
+
+				socket.OnOpen = () => TriggerOnOpen(apiConnection);
+
+                socket.OnClose = () => apiConnection.TriggerOnClose();
+				socket.OnMessage = (message) =>
+				{
+					apiConnection.TriggerOnMessage(message);
+				};
 			});
 		}
 
