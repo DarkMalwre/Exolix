@@ -16,6 +16,11 @@ public class App
 			Animation.Stop("Boot container ready");
 		});
 
+		api.OnOpen((connection) =>
+		{
+			Logger.Info("Opened");
+		});
+
 		api.Run();
 	}
 }

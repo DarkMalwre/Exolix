@@ -52,6 +52,8 @@ namespace Exolix.ApiHost
 		/// </summary>
 		private List<Action> OnReadyEvents = new List<Action>();
 
+		private List<Action<ApiConnection>> OnOpenEvents = new List<Action<ApiConnection>>();
+
 		/// <summary>
 		/// Create a new API endpoint server
 		/// </summary>
@@ -153,6 +155,22 @@ namespace Exolix.ApiHost
 			foreach (var action in OnReadyEvents)
 			{
 				new Thread(new ThreadStart(action)).Start();
+			}
+		}
+
+		public void OnOpen(Action<ApiConnection> action)
+		{
+			OnOpenEvents.Add(action);
+		}
+
+		/// <summary>
+		/// Trigger all on open events
+		/// </summary>
+		private void TriggerOnOpen(ApiConnection connection)
+		{
+			foreach (var action in OnOpenEvents)
+			{
+				new Thread(new ThreadStart(() => action(connection))).Start();
 			}
 		}
 	}
