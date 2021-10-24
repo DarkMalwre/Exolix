@@ -148,6 +148,31 @@ namespace Exolix.ApiHost
         }
 
 		/// <summary>
+		/// Get a list currently connected connections
+		/// </summary>
+		/// <returns>List of all connections</returns>
+		public List<ApiConnection> GetAllConnections()
+        {
+			return ApiConnections;
+        }
+
+		/// <summary>
+		/// Send a message to all currently connected clients
+		/// </summary>
+		/// <typeparam name="MessageType">Data type for message</typeparam>
+		/// <param name="channel">Receiver channel</param>
+		/// <param name="message">Message object</param>
+		public void Emit<MessageType>(string channel, MessageType message)
+        {
+			var connections = GetAllConnections();
+
+			foreach (var connection in connections)
+            {
+				connection.Send<MessageType>(channel, message);
+            }
+        }
+
+		/// <summary>
 		/// Start listening for API commands
 		/// </summary>
 		public void Run()
