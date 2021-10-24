@@ -1,4 +1,5 @@
-﻿using Fleck;
+﻿using Exolix.Json;
+using Fleck;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,18 @@ namespace Exolix.ApiHost
 			RemoteAddress = connection.ConnectionInfo.ClientIpAddress;
 			RealConnection = connection;
 		}
+
+		public void Send<MessageType>(string channel, MessageType message)
+        {
+			var stringMessageData = JsonHandler.Stringify<MessageType>(message);
+			var fullMessageString = JsonHandler.Stringify(new
+			{
+				Channel = channel,
+				Data = stringMessageData
+			});
+
+			RealConnection.Send(fullMessageString);
+        }
 
 		public void OnClose(Action<ApiConnection> action)
 		{

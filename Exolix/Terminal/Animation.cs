@@ -24,8 +24,8 @@ namespace Exolix.Terminal
 		public string FrameHexColor = "60cdff";
 	}
 
-	//[Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
-	public class Animation
+    [Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
+    public class Animation
 	{
 		private static Thread? RenderingThreadInstance;
 		private static AnimationSettings? Settings;
