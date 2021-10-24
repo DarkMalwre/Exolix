@@ -14,10 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Sockets\Server\Events.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -25,16 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fleck" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Pastel" Version="2.1.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Page Include="Sockets\Server\Events.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
 </Project>
