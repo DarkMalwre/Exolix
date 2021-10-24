@@ -7,147 +7,147 @@ using System.Threading.Tasks;
 
 namespace Exolix.Terminal
 {
-    public class AnimationSettings
-    {
-        public string Prefix = "";
+	public class AnimationSettings
+	{
+		public string Prefix = "";
 
-        public string[] Frames = { "   ",
-            ".  ",
-            ".. ",
-            "...",
-            " ..",
-            "  ."
-        };
+		public string[] Frames = { "   ",
+			".  ",
+			".. ",
+			"...",
+			" ..",
+			"  ."
+		};
 
-        public int Interval = 50;
+		public int Interval = 50;
 
-        public string FrameHexColor = "60cdff";
-    }
+		public string FrameHexColor = "60cdff";
+	}
 
-    [Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
-    public class Animation
-    {
-        private static Thread? RenderingThreadInstance;
-        private static AnimationSettings? Settings;
-        private static int CurrentFrame = 0;
-        private static bool Running = false;
-        private static string Label = "";
-        private static string LastOutput = "";
+	[Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
+	public class Animation
+	{
+		private static Thread? RenderingThreadInstance;
+		private static AnimationSettings? Settings;
+		private static int CurrentFrame = 0;
+		private static bool Running = false;
+		private static string Label = "";
+		private static string LastOutput = "";
 
-        public static void Start(string label, AnimationSettings? settings = null)
-        {
-            if (settings == null)
-            {
-                settings = new AnimationSettings();
-            }
+		public static void Start(string label, AnimationSettings? settings = null)
+		{
+			if (settings == null)
+			{
+				settings = new AnimationSettings();
+			}
 
-            Settings = settings;
-            Running = true;
-            CurrentFrame = 0;
-            Label = label;
+			Settings = settings;
+			Running = true;
+			CurrentFrame = 0;
+			Label = label;
 
-            if (RenderingThreadInstance == null)
-            {
-                Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
-                RenderingThreadInstance = renderingThread;
-                renderingThread!.Start();
-            } else if (!RenderingThreadInstance.IsAlive)
-            {
-                Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
-                RenderingThreadInstance = renderingThread;
-                renderingThread!.Start();
-            }
-        }
+			if (RenderingThreadInstance == null)
+			{
+				Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
+				RenderingThreadInstance = renderingThread;
+				renderingThread!.Start();
+			} else if (!RenderingThreadInstance.IsAlive)
+			{
+				Thread renderingThread = new Thread(new ThreadStart(FrameRenderingThread));
+				RenderingThreadInstance = renderingThread;
+				renderingThread!.Start();
+			}
+		}
 
-        public static void Stop(string? label = null, string newState = "success")
-        {
-            if (newState == "success" || newState == "processing" || newState == "error" || newState == "warning")
-            {
-                if (Running)
-                {
-                    if (label != null)
-                    {
-                        Label = label;
-                    }
+		public static void Stop(string? label = null, string newState = "success")
+		{
+			if (newState == "success" || newState == "processing" || newState == "error" || newState == "warning")
+			{
+				if (Running)
+				{
+					if (label != null)
+					{
+						Label = label;
+					}
 
-                    Running = false;
-                    string prefixHex = "60CDFF";
+					Running = false;
+					string prefixHex = "60CDFF";
 
-                    if (newState == "success")
-                    {
-                        prefixHex = "50FFAB";
-                    } else if (newState == "error")
-                    {
-                        prefixHex = "FF0055";
-                    } else if (newState == "warning")
-                    {
-                        prefixHex = "FFA500";
-                    }
+					if (newState == "success")
+					{
+						prefixHex = "50FFAB";
+					} else if (newState == "error")
+					{
+						prefixHex = "FF0055";
+					} else if (newState == "warning")
+					{
+						prefixHex = "FFA500";
+					}
 
-                    RenderCurrentFrame("·", prefixHex);
-                    Logger.PrintDynamic("\n");
-                    return;
-                }
+					RenderCurrentFrame("·", prefixHex);
+					Logger.PrintDynamic("\n");
+					return;
+				}
 
-                new Exception("Animation is not running");
-                return;
-            }
+				new Exception("Animation is not running");
+				return;
+			}
 
-            new Exception("Invalid state type, the following states are supported [ \"processing\", \"success\", \"warning\", \"error\" ] ");
-        }
+			new Exception("Invalid state type, the following states are supported [ \"processing\", \"success\", \"warning\", \"error\" ] ");
+		}
 
-        private static void FrameRenderingThread()
-        {
-            do
-            {
-                CurrentFrame++;
-                if (CurrentFrame > Settings!.Frames.Length - 1)
-                {
-                    CurrentFrame = 0;
-                }
+		private static void FrameRenderingThread()
+		{
+			do
+			{
+				CurrentFrame++;
+				if (CurrentFrame > Settings!.Frames.Length - 1)
+				{
+					CurrentFrame = 0;
+				}
 
-                RenderCurrentFrame();
-                Thread.Sleep((int)Settings!.Interval);
-            } while (Running);
-        }
+				RenderCurrentFrame();
+				Thread.Sleep((int)Settings!.Interval);
+			} while (Running);
+		}
 
-        public static void RenderCurrentFrame(string? prefixIcon = null, string? prefixHex = null)
-        {
-            string suffixSpacing;
-            string outputLabel = Label;
-            string renderPrefixIcon;
+		public static void RenderCurrentFrame(string? prefixIcon = null, string? prefixHex = null)
+		{
+			string suffixSpacing;
+			string outputLabel = Label;
+			string renderPrefixIcon;
 
-            int consoleWidth = Console.WindowWidth;
-            int suffixLength;
+			int consoleWidth = Console.WindowWidth;
+			int suffixLength;
 
-            if (prefixIcon == null)
-            {
-                prefixIcon = Settings!.Frames[CurrentFrame];
-            }
+			if (prefixIcon == null)
+			{
+				prefixIcon = Settings!.Frames[CurrentFrame];
+			}
 
-            if (consoleWidth - LastOutput.Length >= 0)
-            {
-                // TODO: Cut off label
-            }
+			if (consoleWidth - LastOutput.Length >= 0)
+			{
+				// TODO: Cut off label
+			}
 
-            suffixLength = consoleWidth - outputLabel.Length - prefixIcon.Length - 1;
-            if (suffixLength < 0)
-            {
-                suffixLength = 0;
-            }
+			suffixLength = consoleWidth - outputLabel.Length - prefixIcon.Length - 1;
+			if (suffixLength < 0)
+			{
+				suffixLength = 0;
+			}
 
-            suffixSpacing = new string('-', suffixLength);
+			suffixSpacing = new string('-', suffixLength);
 
-            if (prefixHex == null)
-            {
-                renderPrefixIcon = prefixIcon.Pastel("#" + Settings!.FrameHexColor);
-            } else
-            {
-                renderPrefixIcon = prefixIcon.Pastel("#" + prefixHex);
-            }
-             
-            Logger.PrintDynamic($"\r {renderPrefixIcon} {outputLabel}{suffixSpacing}");
-            LastOutput = $"{prefixIcon} {outputLabel}";
-        }
-    }
+			if (prefixHex == null)
+			{
+				renderPrefixIcon = prefixIcon.Pastel("#" + Settings!.FrameHexColor);
+			} else
+			{
+				renderPrefixIcon = prefixIcon.Pastel("#" + prefixHex);
+			}
+			 
+			Logger.PrintDynamic($"\r {renderPrefixIcon} {outputLabel}{suffixSpacing}");
+			LastOutput = $"{prefixIcon} {outputLabel}";
+		}
+	}
 }
