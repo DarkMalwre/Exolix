@@ -16,9 +16,10 @@ namespace Exolix.ApiHost
 		private List<Action<string, string>> OnMessageGlobalEvents = new List<Action<string, string>>();
 
 		public ApiConnection(IWebSocketConnection connection)
-        {
-            RealConnection = connection;
-        }
+		{
+			RemoteAddress = connection.ConnectionInfo.ClientIpAddress;
+			RealConnection = connection;
+		}
 
 		public void OnClose(Action<ApiConnection> action)
 		{

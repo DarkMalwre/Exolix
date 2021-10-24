@@ -1,5 +1,11 @@
 ﻿using Exolix.ApiHost;
+using Exolix.Json;
 using Exolix.Terminal;
+
+public class MsgType
+{
+	public string Msg = "Hewwooo";
+}
 
 public class App
 {
@@ -18,7 +24,7 @@ public class App
 
 		api.OnOpen((connection) =>
 		{
-			Logger.Info("Opened");
+			Logger.Info("[" + connection.RemoteAddress + "] Opened");
 
 			connection.OnClose((connection) =>
 			{
@@ -27,7 +33,8 @@ public class App
 
 			connection.OnMessageGlobal((channel, message) =>
 			{
-				Logger.Info("[" + channel + "] " + message);
+				var nmsg = JsonHandler.Parse<MsgType>(message);
+				Logger.Info("[" + channel + new string(' ', connection.RemoteAddress.Length - channel.Length) + "] " + nmsg.Msg);
 			});
 		});
 
