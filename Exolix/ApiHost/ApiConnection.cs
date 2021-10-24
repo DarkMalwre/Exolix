@@ -51,7 +51,6 @@ namespace Exolix.ApiHost
 		public void CheckAliveState()
         {
 			Alive = RealConnection.IsAvailable;
-			Console.WriteLine("ALV: " + Alive);
 		}
 
 		/// <summary>
