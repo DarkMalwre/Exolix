@@ -25,9 +25,5 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Pastel" Version="2.1.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-<<<<<<< HEAD
-=======
-    <PackageReference Include="WebSocketSharp.NetCore" Version="1.0.1-alpha.4" />
->>>>>>> 376ae36af7f22668769dd0e8e76ad286edde105c
   </ItemGroup>
 </Project>

@@ -19,12 +19,12 @@ namespace Exolix.Terminal
 			"  ."
 		};
 
-		public int Interval = 50;
+		public int Interval = 100;
 
 		public string FrameHexColor = "60cdff";
 	}
 
-	[Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
+	//[Obsolete("Disabled because of timing issues, CLI animations arnt always the best for fast paced code", true)]
 	public class Animation
 	{
 		private static Thread? RenderingThreadInstance;
@@ -130,13 +130,13 @@ namespace Exolix.Terminal
 				// TODO: Cut off label
 			}
 
-			suffixLength = consoleWidth - outputLabel.Length - prefixIcon.Length - 1;
+			suffixLength = consoleWidth - outputLabel.Length - prefixIcon.Length - 2;
 			if (suffixLength < 0)
 			{
 				suffixLength = 0;
 			}
 
-			suffixSpacing = new string('-', suffixLength);
+			suffixSpacing = new string(' ', suffixLength);
 
 			if (prefixHex == null)
 			{
