@@ -25,9 +25,9 @@ public class App
 				Logger.Info("Closed");
 			});
 
-			connection.OnMessage((message) =>
+			connection.OnMessageGlobal((channel, message) =>
 			{
-				Logger.Info("[MSG] " + message);
+				Logger.Info("[" + channel + "] " + message);
 			});
 		});
 

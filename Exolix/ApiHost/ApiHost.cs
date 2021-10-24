@@ -1,4 +1,5 @@
-﻿using Exolix.Terminal;
+﻿using Exolix.Json;
+using Exolix.Terminal;
 using Fleck;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,12 @@ namespace Exolix.ApiHost
 		public ApiHostCertificate? Certificate = null;
 		public ApiClusterAuth? ClusterAuth = null;
 	}
+
+	public class ApiMessageContainer
+    {
+		public string Channel = "Main";
+		public string Data = "{ \"No\": \"Value\" }";
+    }
 
 	public class ApiHost
 	{
@@ -135,11 +142,22 @@ namespace Exolix.ApiHost
 				var apiConnection = new ApiConnection(socket);
 
 				socket.OnOpen = () => TriggerOnOpen(apiConnection);
-
                 socket.OnClose = () => apiConnection.TriggerOnClose();
+
 				socket.OnMessage = (message) =>
 				{
-					apiConnection.TriggerOnMessage(message);
+					try
+                    {
+						var parsedMessageContainer = JsonHandler.Parse<ApiMessageContainer>(message);
+						string channel = parsedMessageContainer.Channel;
+						string data = parsedMessageContainer.Data;
+
+						if (channel != null && channel is string && data != null && data is string)
+                        {
+							apiConnection.TriggerOnMessage(channel, data);
+							apiConnection.TriggerOnMessageGlobal(channel, data);
+                        }
+                    } catch (Exception) { }
 				};
 			});
 		}

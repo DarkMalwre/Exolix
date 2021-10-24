@@ -12,7 +12,8 @@ namespace Exolix.ApiHost
         public string RemoteAddress = "";
         private IWebSocketConnection RealConnection;
         private List<Action<ApiConnection>> OnCloseEvents = new List<Action<ApiConnection>>();
-		private List<Action<string>> OnMessageEvents = new List<Action<string>>();
+		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string, Action<string>>>();
+		private List<Action<string, string>> OnMessageGlobalEvents = new List<Action<string, string>>();
 
 		public ApiConnection(IWebSocketConnection connection)
         {
@@ -35,20 +36,36 @@ namespace Exolix.ApiHost
 			}
 		}
 
-		public void OnMessage(Action<string> action)
+		public void OnMessage(string channel, Action<string> action)
 		{
-			OnMessageEvents.Add(action);
+			OnMessageEvents.Add(Tuple.Create(channel, action));
+		}
+
+		public void OnMessageGlobal(Action<string, string> action)
+		{
+			OnMessageGlobalEvents.Add(action);
 		}
 
 		/// <summary>
 		/// Trigger all on message events
 		/// </summary>
 		/// <param name="message">Message to add to event</param>
-		public void TriggerOnMessage(string message)
+		public void TriggerOnMessage(string channel, string message)
 		{
 			foreach (var action in OnMessageEvents)
 			{
-				new Thread(new ThreadStart(() => action(message))).Start();
+				if (action.Item1 == channel)
+                {
+					new Thread(new ThreadStart(() => action.Item2(message))).Start();
+				}
+			}
+		}
+
+		public void TriggerOnMessageGlobal(string channel, string message)
+		{
+			foreach (var action in OnMessageGlobalEvents)
+			{
+				action(channel, message);
 			}
 		}
 	}
