@@ -50,6 +50,11 @@ namespace Exolix.ApiHost
 		private ApiHostSettings Settings;
 
 		/// <summary>
+		/// All server connections
+		/// </summary>
+		private List<ApiConnection> ApiConnections = new List<ApiConnection>();
+
+		/// <summary>
 		/// Address were server has been opened at
 		/// </summary>
 		public string ListeningAddress = "Server Not Connected";
@@ -59,6 +64,9 @@ namespace Exolix.ApiHost
 		/// </summary>
 		private List<Action> OnReadyEvents = new List<Action>();
 
+		/// <summary>
+		/// On open events list
+		/// </summary>
 		private List<Action<ApiConnection>> OnOpenEvents = new List<Action<ApiConnection>>();
 
 		/// <summary>
@@ -122,6 +130,24 @@ namespace Exolix.ApiHost
 		}
 
 		/// <summary>
+		/// Get a connection from its identifier
+		/// </summary>
+		/// <param name="Identifier">Connection identifier</param>
+		/// <returns>Returns the connection object, otherwise null if it does not exist</returns>
+		public ApiConnection? GetConnection(string Identifier)
+        {
+			foreach (var connection in ApiConnections)
+            {
+				if (connection.Identifier == Identifier)
+                {
+					return connection;
+                }
+            }
+
+			return null;
+        }
+
+		/// <summary>
 		/// Start listening for API commands
 		/// </summary>
 		public void Run()
@@ -141,7 +167,12 @@ namespace Exolix.ApiHost
 			{
 				var apiConnection = new ApiConnection(socket);
 
-				socket.OnOpen = () => TriggerOnOpen(apiConnection);
+				socket.OnOpen = () =>
+                {
+					ApiConnections.Add(apiConnection);
+					TriggerOnOpen(apiConnection);
+				};
+
                 socket.OnClose = () => apiConnection.TriggerOnClose();
 
 				socket.OnMessage = (message) =>

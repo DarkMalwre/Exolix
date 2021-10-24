@@ -30,7 +30,7 @@ public class App
 				var nmsg = JsonHandler.Parse<MsgType>(message);
 				connection.Send("Main", new MsgType
 				{
-					Msg = "Heyyy"
+					Msg = nmsg.Msg,
 				});
 			});
 		});

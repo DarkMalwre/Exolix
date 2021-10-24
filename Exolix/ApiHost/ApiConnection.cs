@@ -11,6 +11,7 @@ namespace Exolix.ApiHost
     public class ApiConnection
     {
         public string RemoteAddress = "";
+		public string Identifier = "";
         private IWebSocketConnection RealConnection;
         private List<Action<ApiConnection>> OnCloseEvents = new List<Action<ApiConnection>>();
 		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string, Action<string>>>();
@@ -18,6 +19,7 @@ namespace Exolix.ApiHost
 
 		public ApiConnection(IWebSocketConnection connection)
 		{
+			Identifier = connection.ConnectionInfo.Id.ToString();
 			RemoteAddress = connection.ConnectionInfo.ClientIpAddress;
 			RealConnection = connection;
 		}
