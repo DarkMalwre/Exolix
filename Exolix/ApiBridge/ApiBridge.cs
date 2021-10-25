@@ -26,5 +26,10 @@ namespace Exolix.ApiBridge
 
             Settings = settings;
         }
+
+        public void Run()
+        {
+
+        }
     }
 }

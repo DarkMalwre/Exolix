@@ -167,19 +167,18 @@ namespace Exolix.ApiHost
 		public void Emit<MessageType>(string channel, MessageType message)
         {
 			CheckAliveConnections();
-			var connections = GetAllConnections();
-
-			try
+	
+			foreach (var connection in ApiConnections)
 			{
-				foreach (var connection in connections)
-				{
+				try
+                {
 					connection.Send<MessageType>(channel, message);
-				}
-			} catch (Exception)
-            {
-				Emit(channel, message);
-            }
-        }
+				} catch (Exception)
+                {
+					CheckAliveConnections();
+                }
+			}
+		}
 
 		private void CheckAliveConnections()
         {
