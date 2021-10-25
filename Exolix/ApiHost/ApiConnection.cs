@@ -13,7 +13,7 @@ namespace Exolix.ApiHost
         public string RemoteAddress = "";
 		public string Identifier = "";
         private IWebSocketConnection RealConnection;
-        private List<Action<ApiConnection>> OnCloseEvents = new List<Action<ApiConnection>>();
+        private List<Action<ApiConnection?>> OnCloseEvents = new List<Action<ApiConnection?>>();
 		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string, Action<string>>>();
 		private List<Action<string, string>> OnMessageGlobalEvents = new List<Action<string, string>>();
 		public bool Alive = false;
@@ -43,7 +43,28 @@ namespace Exolix.ApiHost
 			} catch (Exception) { }
         }
 
-		public void OnClose(Action<ApiConnection> action)
+		public void Close()
+        {
+			bool alreadyClosed = false;
+
+			try
+			{
+				RealConnection.Close();
+			}
+			catch (Exception) {
+				alreadyClosed = true;
+			} finally
+            {
+				Alive = false;
+
+				if (!alreadyClosed)
+                {
+					TriggerOnClose();
+                }
+            }
+        }
+
+		public void OnClose(Action<ApiConnection?> action)
 		{
 			OnCloseEvents.Add(action);
 		}
@@ -59,9 +80,11 @@ namespace Exolix.ApiHost
 		public void TriggerOnClose()
 		{
 			CheckAliveState();
+			ApiConnection instance = (ApiConnection)this.MemberwiseClone();
+
 			foreach (var action in OnCloseEvents)
 			{
-				new Thread(new ThreadStart(() => action(this))).Start();
+				new Thread(new ThreadStart(() => action(instance))).Start();
 			}
 		}
 

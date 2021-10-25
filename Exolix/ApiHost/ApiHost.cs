@@ -173,12 +173,13 @@ namespace Exolix.ApiHost
 			{
 				try
 				{
-					connection.Send<MessageType>(channel, message);
+					connection?.Send<MessageType>(channel, message);
 					CheckAliveConnections();
 				}
 				catch (Exception)
 				{
 					ApiConnections.Remove(connection);
+					connection?.Close();
 					CheckAliveConnections();
 				}
 			}

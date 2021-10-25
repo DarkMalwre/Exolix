@@ -48,7 +48,7 @@ public class App
 				Logger.Info("Closed Total = " + api.ConnectedClients);
 				api.Emit("channel", new MsgType
 				{
-					Msg = "[System] User Disconnected { Total = " + api.ConnectedClients + ", IP = " + connection.RemoteAddress + " }"
+					Msg = "[System] User Disconnected { Total = " + api.ConnectedClients + ", IP = " + connection?.RemoteAddress + " }"
 				});
 			});
 
