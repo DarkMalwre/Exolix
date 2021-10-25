@@ -37,10 +37,10 @@ namespace Exolix.ApiHost
 	}
 
 	public class ApiMessageContainer
-    {
+	{
 		public string Channel = "Main";
 		public string Data = "{ \"No\": \"Value\" }";
-    }
+	}
 
 	public class ApiHost
 	{
@@ -137,26 +137,26 @@ namespace Exolix.ApiHost
 		/// <param name="Identifier">Connection identifier</param>
 		/// <returns>Returns the connection object, otherwise null if it does not exist</returns>
 		public ApiConnection? GetConnection(string Identifier)
-        {
+		{
 			foreach (var connection in ApiConnections)
-            {
+			{
 				if (connection.Identifier == Identifier)
-                {
+				{
 					return connection;
-                }
-            }
+				}
+			}
 
 			return null;
-        }
+		}
 
 		/// <summary>
 		/// Get a list currently connected connections
 		/// </summary>
 		/// <returns>List of all connections</returns>
 		public List<ApiConnection> GetAllConnections()
-        {
+		{
 			return ApiConnections;
-        }
+		}
 
 		/// <summary>
 		/// Send a message to all currently connected clients
@@ -165,25 +165,29 @@ namespace Exolix.ApiHost
 		/// <param name="channel">Receiver channel</param>
 		/// <param name="message">Message object</param>
 		public void Emit<MessageType>(string channel, MessageType message)
-        {
+		{
+			var allCons = new List<ApiConnection>(GetAllConnections());
 			CheckAliveConnections();
-	
-			foreach (var connection in ApiConnections)
+
+			foreach (var connection in allCons)
 			{
 				try
-                {
+				{
 					connection.Send<MessageType>(channel, message);
-				} catch (Exception)
-                {
 					CheckAliveConnections();
-                }
+				}
+				catch (Exception)
+				{
+					ApiConnections.Remove(connection);
+					CheckAliveConnections();
+				}
 			}
 		}
 
 		private void CheckAliveConnections()
-        {
+		{
 			try
-            {
+			{
 				var connections = GetAllConnections();
 				foreach (var connection in connections)
 				{
@@ -194,10 +198,10 @@ namespace Exolix.ApiHost
 					}
 				}
 			} catch (Exception)
-            {
+			{
 				CheckAliveConnections();
-            }
-        }
+			}
+		}
 
 		/// <summary>
 		/// Start listening for API commands
@@ -216,7 +220,7 @@ namespace Exolix.ApiHost
 			};
 
 			server.Start((socket) =>
-            {
+			{
 				new Thread(new ThreadStart(() =>
 				{
 					var apiConnection = new ApiConnection(socket);
@@ -280,16 +284,16 @@ namespace Exolix.ApiHost
 		}
 
 		public void RemoveConnection(string Identifer)
-        {
+		{
 			foreach (var connection in ApiConnections)
-            {
+			{
 				if (connection.Identifier == Identifer)
-                {
+				{
 					ApiConnections.Remove(connection);
 					break;
-                }
-            }
-        }
+				}
+			}
+		}
 
 		public void OnOpen(Action<ApiConnection> action)
 		{
