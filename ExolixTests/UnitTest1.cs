@@ -1,4 +1,5 @@
-﻿using Exolix.ApiHost;
+﻿using Exolix.ApiBridge;
+using Exolix.ApiHost;
 using Exolix.Json;
 using Exolix.Terminal;
 
@@ -24,6 +25,14 @@ public class App
 		api.OnReady(() =>
         {
 			Logger.Success("Listening on 8080");
+
+			var cl = new ApiBridge(new ApiBridgeSettings
+			{
+				Port = 8080
+			});
+
+
+			cl.Run();
         });
 
 		api.OnOpen((connection) =>
