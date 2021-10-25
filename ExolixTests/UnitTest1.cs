@@ -7,6 +7,11 @@ public class MsgType
 	public string Msg = "Hewwooo";
 }
 
+public class CommandType
+{
+	public string Time = "[SYSTEM] ( BOT ) NO TIME SET UWU";
+}
+
 public class App
 {
 	public static void Main(string[] args)
@@ -36,6 +41,15 @@ public class App
 			connection.OnMessageGlobal((channel, message) =>
 			{
 				var nmsg = JsonHandler.Parse<MsgType>(message);
+				if (nmsg.Msg.Contains("/get-time"))
+                {
+					api.Emit("command", new MsgType
+                    {
+						Msg = new CommandType().Time + " <-"
+                    });
+					Logger.Info("[CMD] Get Time");
+                }
+
 				api.Emit("Main", new MsgType
 				{
 					Msg = nmsg.Msg,
