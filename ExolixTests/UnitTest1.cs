@@ -43,12 +43,12 @@ public class App
 			});
 			Logger.Info("[" + connection.RemoteAddress + "] Opened Total = " + api.ConnectedClients);
 
-			connection.OnClose((connection) =>
+			connection.OnClose((connectionClose) =>
 			{
 				Logger.Info("Closed Total = " + api.ConnectedClients);
 				api.Emit("channel", new MsgType
 				{
-					Msg = "[System] User Disconnected { Total = " + api.ConnectedClients + ", IP = " + connection?.RemoteAddress + " }"
+					Msg = "[System] User Disconnected { Total = " + api.ConnectedClients + ", IP = " + connectionClose.RemoteAddress + " }"
 				});
 			});
 

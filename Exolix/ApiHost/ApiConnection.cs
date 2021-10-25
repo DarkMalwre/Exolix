@@ -13,7 +13,7 @@ namespace Exolix.ApiHost
         public string RemoteAddress = "";
 		public string Identifier = "";
         private IWebSocketConnection RealConnection;
-        private List<Action<ApiConnection?>> OnCloseEvents = new List<Action<ApiConnection?>>();
+        private List<Action<ApiConnection>> OnCloseEvents = new List<Action<ApiConnection>>();
 		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string, Action<string>>>();
 		private List<Action<string, string>> OnMessageGlobalEvents = new List<Action<string, string>>();
 		public bool Alive = false;
@@ -64,7 +64,7 @@ namespace Exolix.ApiHost
             }
         }
 
-		public void OnClose(Action<ApiConnection?> action)
+		public void OnClose(Action<ApiConnection> action)
 		{
 			OnCloseEvents.Add(action);
 		}
