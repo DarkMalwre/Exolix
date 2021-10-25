@@ -1,76 +1,43 @@
-﻿using Exolix.ApiBridge;
-using Exolix.ApiHost;
+﻿using Exolix.ApiHost;
 using Exolix.Json;
-using Exolix.Terminal;
+using System;
 
-public class MsgType
+// Create a structure for messages from a connection
+public class MessageType
 {
-	public string Msg = "Hewwooo";
+	public string Msg = "No Message Was Provided";
 }
 
-public class CommandType
-{
-	public string Time = "[SYSTEM] ( BOT ) NO TIME SET UWU";
-}
-
+// Application main class (Entry Point)
 public class App
 {
 	public static void Main(string[] args)
 	{
-		var api = new ApiHost(new ApiHostSettings
-		{
-			Port = 8080
-		});
-
-		api.OnReady(() =>
+		// Create the new API server
+		ApiHost api = new ApiHost(new ApiHostSettings
         {
-			Logger.Success("Listening on 8080");
-
-			var cl = new ApiBridge(new ApiBridgeSettings
-			{
-				Port = 8080
-			});
-
-
-			cl.Run();
+			Port = 8080 // Set the listening port to 8080
         });
 
+		// Listen for when the server is ready to listen for connections
+		api.OnReady(() =>
+		{
+			Console.WriteLine("The server is ready"); // Log the success message
+		});
+
+		// Listen for when the server recieves a new connection
 		api.OnOpen((connection) =>
 		{
-			api.Emit("channel", new MsgType
-			{
-				Msg = "[System] New User Connected { Total = " + api.ConnectedClients + ", IP = " + connection.RemoteAddress + " }"
-			});
-			Logger.Info("[" + connection.RemoteAddress + "] Opened Total = " + api.ConnectedClients);
+			Console.WriteLine("[ Connection ] Opened, IP address is \"" + connection.RemoteAddress + "\""); // Log to the server about a new connection
 
-			connection.OnClose((connectionClose) =>
+			// Listen for messages from the connection
+			connection.OnMessageGlobal((channel /* What channel the message was sent to */, raw /* Message serialized data */) =>
 			{
-				Logger.Info("Closed Total = " + api.ConnectedClients);
-				api.Emit("channel", new MsgType
-				{
-					Msg = "[System] User Disconnected { Total = " + api.ConnectedClients + ", IP = " + connectionClose.RemoteAddress + " }"
-				});
-			});
-
-			connection.OnMessageGlobal((channel, message) =>
-			{
-				var nmsg = JsonHandler.Parse<MsgType>(message);
-				if (nmsg.Msg.Contains("/get-time"))
-                {
-					api.Emit("command", new MsgType
-                    {
-						Msg = new CommandType().Time + " <-"
-                    });
-					Logger.Info("[CMD] Get Time");
-                }
-
-				api.Emit("Main", new MsgType
-				{
-					Msg = nmsg.Msg,
-				});
+				MessageType message = JsonHandler.Parse<MessageType>(raw); // Convert the raw message data to an object
+				Console.WriteLine("[ Message ] New message on channel \"" + channel + "\", Contents = \"" + message.Msg + "\""); // Log information about the message
 			});
 		});
 
-		api.Run();
+		api.Run(); // Start the server and try to listen on the listening address
 	}
 }
