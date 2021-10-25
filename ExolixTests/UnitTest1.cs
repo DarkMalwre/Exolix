@@ -21,6 +21,11 @@ public class App
 			Port = 8080
 		});
 
+		api.OnReady(() =>
+        {
+			Logger.Success("Listening on 8080");
+        });
+
 		api.OnOpen((connection) =>
 		{
 			api.Emit("channel", new MsgType
