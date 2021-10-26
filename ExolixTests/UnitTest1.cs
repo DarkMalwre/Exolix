@@ -15,9 +15,9 @@ public class App
 	{
 		// Create the new API server
 		ApiHost api = new ApiHost(new ApiHostSettings
-        {
+		{
 			Port = 8080 // Set the listening port to 8080
-        });
+		});
 
 		// Listen for when the server is ready to listen for connections
 		api.OnReady(() =>
