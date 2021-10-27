@@ -24,13 +24,13 @@ public class App
 		// Listen for when the server is ready to listen for connections
 		api.OnReady(() =>
 		{
-			Console.WriteLine("The server is ready"); // Log the success message
+			Logger.Info("The server is ready"); // Log the success message
 		});
 
 		// Listen for when the server recieves a new connection
 		api.OnOpen((connection) =>
 		{
-			Console.WriteLine("[ Connection ] Opened, IP address is \"" + connection.RemoteAddress + "\""); // Log to the server about a new connection
+			Logger.Info("[ Connection ] Opened, IP address is \"" + connection.RemoteAddress + "\""); // Log to the server about a new connection
 
 			// Listen for messages from the connection
 			connection.OnMessageGlobal((channel /* What channel the message was sent to */, raw /* Message serialized data */) =>
@@ -49,7 +49,7 @@ public class App
 
 		bridge.OnOpen(() =>
 		{
-			Logger.Info("Server connection has been opened, but it may not be fully ready for reading commands");
+			Logger.Info("Server connection has been opened, waiting for ready command");
 		});
 
         bridge.OnReady(() =>
