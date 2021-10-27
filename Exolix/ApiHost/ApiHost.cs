@@ -51,9 +51,9 @@ namespace Exolix.ApiHost
 	}
 
 	public class PeerStatusMessage
-    {
+	{
 		public bool Success = false;
-    }
+	}
 
 	public class ApiHost
 	{
@@ -219,9 +219,9 @@ namespace Exolix.ApiHost
 		}
 
 		public void ConnectPeerNodes(Action doneConnecting)
-        {
+		{
 			foreach (var peerNode in Settings.PeerNodes!)
-            {
+			{
 				ApiConnector node = new ApiConnector(new ApiBridgeSettings
 				{
 					Host = peerNode.Host,
@@ -231,10 +231,10 @@ namespace Exolix.ApiHost
 				node.OnOpen(() =>
 				{
 					node.Send<PeerSetupMessage>("#$server:peers:authenticate", new PeerSetupMessage
-                    {
+					{
 						Key1 = peerNode.Key1,
 						Key2 = peerNode.Key2
-                    });
+					});
 				});
 
 				node.OnMessage("#$server:peers:status", (raw) =>
@@ -243,8 +243,8 @@ namespace Exolix.ApiHost
 				});
 
 				node.Run();
-            }
-        }
+			}
+		}
 
 		/// <summary>
 		/// Start listening for API commands
@@ -259,7 +259,7 @@ namespace Exolix.ApiHost
 				if (message == "Server started at " + ListeningAddress + " (actual port " + Settings.Port + ")")
 				{
 					if (Settings.PeerNodes != null)
-                    {
+					{
 						new Thread(new ThreadStart(() =>
 						{
 							ConnectPeerNodes(() =>
@@ -268,15 +268,15 @@ namespace Exolix.ApiHost
 								TriggerOnReady();
 							});
 						})).Start();
-                    } else
-                    {
+					} else
+					{
 						ClusterReady = true;
 						TriggerOnReady();
 					}
-                } else
-                {
+				} else
+				{
 					//Logger.Warning(message);
-                }
+				}
 			};
 
 			Action runServerLogic = () =>
@@ -320,13 +320,13 @@ namespace Exolix.ApiHost
 										PeerSetupMessage setupMessage = JsonHandler.Parse<PeerSetupMessage>(data);
 										
 										if (setupMessage.Key1 == Settings.PeerAuth?.Key1 && setupMessage.Key2 == Settings.PeerAuth?.Key2)
-                                        {
+										{
 											apiConnection.HasControllRights = true;
 											apiConnection.Send<PeerStatusMessage>("#$server:peers:status", new PeerStatusMessage
 											{
 												Success = true
 											});
-                                        }
+										}
 
 										return;
 									}
