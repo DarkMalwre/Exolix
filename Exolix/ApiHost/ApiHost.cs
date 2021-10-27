@@ -62,6 +62,8 @@ namespace Exolix.ApiHost
 		/// </summary>
 		private ApiHostSettings Settings;
 
+		private int TotalPeersReady = 0;
+
 		/// <summary>
 		/// All server connections
 		/// </summary>
@@ -239,7 +241,16 @@ namespace Exolix.ApiHost
 
 				node.OnMessage("#$server:peers:status", (raw) =>
 				{
-					Console.WriteLine(raw);
+					PeerStatusMessage message = JsonHandler.Parse<PeerStatusMessage>(raw);
+					if (message.Success)
+                    {
+						TotalPeersReady++;
+
+						if (TotalPeersReady == Settings.PeerNodes.Count)
+                        {
+							doneConnecting();
+                        }
+                    }
 				});
 
 				node.Run();
