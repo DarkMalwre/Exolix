@@ -1,4 +1,5 @@
-﻿using Exolix.ApiHost;
+﻿using Exolix.ApiBridge;
+using Exolix.ApiHost;
 using Exolix.Json;
 using System;
 
@@ -23,6 +24,12 @@ public class App
 		api.OnReady(() =>
 		{
 			Console.WriteLine("The server is ready"); // Log the success message
+			ApiBridge brd =	new ApiBridge(new ApiBridgeSettings
+            {
+				Port = 8080
+            });
+
+			brd.Run();
 		});
 
 		// Listen for when the server recieves a new connection

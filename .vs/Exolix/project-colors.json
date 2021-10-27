@@ -15,7 +15,12 @@
       "ProjectGuid": "b8a40907-ab79-4dfc-a7ed-d772a7330788",
       "DisplayName": "ExolixTests",
       "ColorIndex": 1
+    },
+    "d51dbd88-d6c3-4821-8b22-e459633072f1": {
+      "ProjectGuid": "d51dbd88-d6c3-4821-8b22-e459633072f1",
+      "DisplayName": "ExolixNode",
+      "ColorIndex": 2
     }
   },
-  "NextColorIndex": 2
+  "NextColorIndex": 3
 }
