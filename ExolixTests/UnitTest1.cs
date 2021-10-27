@@ -40,7 +40,7 @@ public class App
 			});
 		});
 
-		api.Run(); // Start the server and try to listen on the listening address
+		//api.Run(); // Start the server and try to listen on the listening address
 
 		ApiBridge bridge = new ApiBridge(new ApiBridgeSettings
 		{

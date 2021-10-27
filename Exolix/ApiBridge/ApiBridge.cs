@@ -55,6 +55,7 @@ namespace Exolix.ApiBridge
 
 		public void Run()
 		{
+			Terminal.Logger.KeepAlive(true);
 			ServerAddress = BuildConnectAddress(); 
 			Socket = new WebSocket(ServerAddress);
 
