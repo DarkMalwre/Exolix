@@ -1,4 +1,5 @@
-﻿using Exolix.Json;
+﻿using Exolix.ApiBridge;
+using Exolix.Json;
 using Exolix.Terminal;
 using Fleck;
 using System;
@@ -14,7 +15,7 @@ namespace Exolix.ApiHost
 		public string Key = "";
 	}
 
-	public class ApiClusterAuth
+	public class ApiPeerAuth
 	{
 		public string Key1 = "";
 		public string Key2 = "";
@@ -24,7 +25,7 @@ namespace Exolix.ApiHost
 	{
 		public string Key1 = "";
 		public string Key2 = "";
-		public string Host = "0.0.0.0";
+		public string Host = "localhost";
 		public int? Port = null;
 	}
 
@@ -33,7 +34,8 @@ namespace Exolix.ApiHost
 		public string Host = "0.0.0.0";
 		public int? Port = null;
 		public ApiHostCertificate? Certificate = null;
-		public ApiClusterAuth? ClusterAuth = null;
+		public ApiPeerAuth? PeerAuth = null;
+		public List<ApiPeerNode>? PeerNodes = null;
 	}
 
 	public class ApiMessageContainer
@@ -42,11 +44,16 @@ namespace Exolix.ApiHost
 		public string Data = "{ \"No\": \"Value\" }";
 	}
 
-	public class ClusterSetupMessage
+	public class PeerSetupMessage
 	{
 		public string Key1 = "";
 		public string Key2 = "";
 	}
+
+	public class PeerStatusMessage
+    {
+		public bool Success = false;
+    }
 
 	public class ApiHost
 	{
@@ -211,6 +218,34 @@ namespace Exolix.ApiHost
 			}
 		}
 
+		public void ConnectPeerNodes(Action doneConnecting)
+        {
+			foreach (var peerNode in Settings.PeerNodes!)
+            {
+				ApiConnector node = new ApiConnector(new ApiBridgeSettings
+				{
+					Host = peerNode.Host,
+					Port = peerNode.Port
+				});
+
+				node.OnOpen(() =>
+				{
+					node.Send<PeerSetupMessage>("#$server:peers:authenticate", new PeerSetupMessage
+                    {
+						Key1 = peerNode.Key1,
+						Key2 = peerNode.Key2
+                    });
+				});
+
+				node.OnMessage("#$server:peers:status", (raw) =>
+				{
+					Console.WriteLine(raw);
+				});
+
+				node.Run();
+            }
+        }
+
 		/// <summary>
 		/// Start listening for API commands
 		/// </summary>
@@ -223,9 +258,25 @@ namespace Exolix.ApiHost
 			FleckLog.LogAction = (level, message, ex) => {
 				if (message == "Server started at " + ListeningAddress + " (actual port " + Settings.Port + ")")
 				{
-					ClusterReady = true;
-					TriggerOnReady();
-				}
+					if (Settings.PeerNodes != null)
+                    {
+						new Thread(new ThreadStart(() =>
+						{
+							ConnectPeerNodes(() =>
+							{
+								ClusterReady = true;
+								TriggerOnReady();
+							});
+						})).Start();
+                    } else
+                    {
+						ClusterReady = true;
+						TriggerOnReady();
+					}
+                } else
+                {
+					//Logger.Warning(message);
+                }
 			};
 
 			Action runServerLogic = () =>
@@ -266,8 +317,17 @@ namespace Exolix.ApiHost
 								{
 									if (!ClusterReady)
 									{
-										ClusterSetupMessage setupMessage = JsonHandler.Parse<ClusterSetupMessage>(data);
-										// TODO: Handler cluster auth
+										PeerSetupMessage setupMessage = JsonHandler.Parse<PeerSetupMessage>(data);
+										
+										if (setupMessage.Key1 == Settings.PeerAuth?.Key1 && setupMessage.Key2 == Settings.PeerAuth?.Key2)
+                                        {
+											apiConnection.HasControllRights = true;
+											apiConnection.Send<PeerStatusMessage>("#$server:peers:status", new PeerStatusMessage
+											{
+												Success = true
+											});
+                                        }
+
 										return;
 									}
 
@@ -275,7 +335,9 @@ namespace Exolix.ApiHost
 									apiConnection.TriggerOnMessageGlobal(channel, data);
 								}
 							}
-							catch (Exception) { }
+							catch (Exception) {
+								apiConnection.Close();
+							}
 						};
 					})).Start();
 				});

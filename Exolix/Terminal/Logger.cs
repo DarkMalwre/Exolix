@@ -10,6 +10,14 @@ using System.Threading.Tasks;
 
 namespace Exolix.Terminal
 {
+	public static class StandAloneLogger
+    {
+		public static void LogObj(object obj)
+        {
+			Console.WriteLine(obj.ToString());
+        }
+    }
+
 	public class Logger
 	{
 		private static bool KeepAliveState = false;

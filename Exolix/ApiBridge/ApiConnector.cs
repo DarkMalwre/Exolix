@@ -11,12 +11,12 @@ namespace Exolix.ApiBridge
 {
 	public class ApiBridgeSettings
 	{
-		public string Host = "localhost";
+		public string Host = "0.0.0.0";
 		public int? Port = null;
 		public bool Secure = false;
 	}
 
-	public class ApiBridge
+	public class ApiConnector
 	{
 		public ApiBridgeSettings Settings;
 		public string ServerAddress = "";
@@ -25,7 +25,7 @@ namespace Exolix.ApiBridge
 		private List<Action> OnReadyEvents = new List<Action>();
 		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string,Action<string>>>();
 
-		public ApiBridge(ApiBridgeSettings? settings = null)
+		public ApiConnector(ApiBridgeSettings? settings = null)
 		{
 			if (settings == null)
 			{
@@ -56,7 +56,7 @@ namespace Exolix.ApiBridge
 		public void Run()
 		{
 			Terminal.Logger.KeepAlive(true);
-			ServerAddress = BuildConnectAddress(); 
+			ServerAddress = BuildConnectAddress();
 			Socket = new WebSocket(ServerAddress);
 
 			OnMessage("#$server:ready", (raw) =>
@@ -121,5 +121,26 @@ namespace Exolix.ApiBridge
 				}
 			}
 		}
+
+		public void Send<MessageType>(string channel, MessageType message)
+        {
+			if (Socket != null && Socket.IsAlive)
+            {
+				try
+				{
+					string parsed = JsonHandler.Stringify(new
+					{
+						Channel = channel,
+						Data = JsonHandler.Stringify(message)
+					});
+
+					Socket.Send(parsed);
+				} catch (Exception) { }
+
+				return;
+			}
+
+			throw new Exception("Socket is not connected");
+        }
 	}
 }

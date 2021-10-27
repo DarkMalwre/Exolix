@@ -22,7 +22,19 @@ public class App
 		// Create the new API server
 		ApiHost api = new ApiHost(new ApiHostSettings
 		{
-			Port = 8090 // Set the listening port to 8080
+			Port = 8070, // Set the listening port to 8070
+			PeerAuth = new ApiPeerAuth
+            {
+				Key1 = "peer"
+            },
+			PeerNodes = new List<ApiPeerNode>
+            {
+                new ApiPeerNode
+                {
+					Port = 8070,
+					Key1 = "peer"
+                }
+            }
 		});
 
 		// Listen for when the server is ready to listen for connections
