@@ -3,11 +3,13 @@ using Exolix.ApiHost;
 using Exolix.Json;
 using Exolix.Terminal;
 using System;
+using System.Collections.Generic;
 
 // Create a structure for messages from a connection
 public class MessageType
 {
-	public string Msg = "No Message Was Provided";
+	public string Message = "No Message Was Provided";
+	public string Poster = "Unknown";
 }
 
 // Application main class (Entry Point)
@@ -15,6 +17,8 @@ public class App
 {
 	public static void Main(string[] args)
 	{
+		List<Tuple<string, string>> posts = new List<Tuple<string, string>>();
+
 		// Create the new API server
 		ApiHost api = new ApiHost(new ApiHostSettings
 		{
@@ -27,36 +31,33 @@ public class App
 			Logger.Info("The server is ready"); // Log the success message
 		});
 
+		var emitPosts = () =>
+		{
+			api.Emit("post:clear-ui", new { });
+
+			foreach (var post in posts)
+            {
+				api.Emit("post:read", post);
+            }
+		};
+
 		// Listen for when the server recieves a new connection
 		api.OnOpen((connection) =>
 		{
+			emitPosts();
 			Logger.Info("[ Connection ] Opened, IP address is \"" + connection.RemoteAddress + "\""); // Log to the server about a new connection
 
 			// Listen for messages from the connection
-			connection.OnMessageGlobal((channel /* What channel the message was sent to */, raw /* Message serialized data */) =>
+			connection.OnMessage("post:write", (raw) =>
 			{
-				MessageType message = JsonHandler.Parse<MessageType>(raw); // Convert the raw message data to an object
-				Console.WriteLine("[ Message ] New message on channel \"" + channel + "\", Contents = \"" + message.Msg + "\""); // Log information about the message
+				MessageType message = JsonHandler.Parse<MessageType>(raw);
+				Logger.Info("Creating new post by " + message.Poster);
+
+				posts.Add(Tuple.Create(message.Poster, message.Message));
+				emitPosts();
 			});
 		});
 
-		//api.Run(); // Start the server and try to listen on the listening address
-
-		ApiBridge bridge = new ApiBridge(new ApiBridgeSettings
-		{
-			Port = 8090
-		});
-
-		bridge.OnOpen(() =>
-		{
-			Logger.Info("Server connection has been opened, waiting for ready command");
-		});
-
-        bridge.OnReady(() =>
-        {
-			Logger.Success("Server is ready for listening");
-        });
-
-        bridge.Run();
+        api.Run(); // Start the server and try to listen on the listening address
     }
 }
