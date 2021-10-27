@@ -52,15 +52,10 @@ public class App
 			Logger.Info("Server connection has been opened, but it may not be fully ready for reading commands");
 		});
 
-		bridge.OnMessage("#$server:ready", (raw) =>
-		{
-			Logger.Info(raw);
-		});
-
-        //bridge.OnReady(() =>
-        //{
-
-        //});
+        bridge.OnReady(() =>
+        {
+			Logger.Success("Server is ready for listening");
+        });
 
         bridge.Run();
     }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Exolix.ApiHost;
+using Exolix.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,90 +9,116 @@ using WebSocketSharp.NetCore;
 
 namespace Exolix.ApiBridge
 {
-    public class ApiBridgeSettings
-    {
-        public string Host = "localhost";
-        public int? Port = null;
-        public bool Secure = false;
-    }
+	public class ApiBridgeSettings
+	{
+		public string Host = "localhost";
+		public int? Port = null;
+		public bool Secure = false;
+	}
 
-    public class ApiBridge
-    {
-        public ApiBridgeSettings Settings;
-        public string ServerAddress = "";
-        private WebSocket? Socket;
-        private List<Action> OnOpenEvents = new List<Action>();
-        private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string,Action<string>>>();
+	public class ApiBridge
+	{
+		public ApiBridgeSettings Settings;
+		public string ServerAddress = "";
+		private WebSocket? Socket;
+		private List<Action> OnOpenEvents = new List<Action>();
+		private List<Action> OnReadyEvents = new List<Action>();
+		private List<Tuple<string, Action<string>>> OnMessageEvents = new List<Tuple<string,Action<string>>>();
 
-        public ApiBridge(ApiBridgeSettings? settings = null)
-        {
-            if (settings == null)
-            {
-                Settings = new ApiBridgeSettings();
-                return;
-            }
+		public ApiBridge(ApiBridgeSettings? settings = null)
+		{
+			if (settings == null)
+			{
+				Settings = new ApiBridgeSettings();
+				return;
+			}
 
-            Settings = settings;
-        }
+			Settings = settings;
+		}
 
-        private string BuildConnectAddress()
-        {
-            string protocol = "ws://";
-            if (Settings.Secure)
-            {
-                protocol = "wss://";
-            }
+		private string BuildConnectAddress()
+		{
+			string protocol = "ws://";
+			if (Settings.Secure)
+			{
+				protocol = "wss://";
+			}
 
-            string prefix = "";
-            if (Settings.Port != null)
-            {
-                prefix = ":" + Settings.Port;
-            }
+			string prefix = "";
+			if (Settings.Port != null)
+			{
+				prefix = ":" + Settings.Port;
+			}
 
-            return protocol + Settings.Host + prefix;
-        }
+			return protocol + Settings.Host + prefix;
+		}
 
-        public void Run()
-        {
-            ServerAddress = BuildConnectAddress(); 
-            Socket = new WebSocket(ServerAddress);
+		public void Run()
+		{
+			ServerAddress = BuildConnectAddress(); 
+			Socket = new WebSocket(ServerAddress);
 
-            Socket.OnOpen += (sender, e) => TriggerOnOpenEvents();
-            Socket.OnMessage += (sender, e) =>
-            {
-                TriggerOnMessageEvents("#$server:ready", e.Data);
-            };
+			OnMessage("#$server:ready", (raw) =>
+			{
+				TriggerOnReadyEvents();
+			});
 
-            Socket.Connect();
-        }
-         
-        public void OnOpen(Action action)
-        {
-            OnOpenEvents.Add(action);
-        }
+			Socket.OnOpen += (sender, e) => TriggerOnOpenEvents();
+			Socket.OnMessage += (sender, e) =>
+			{
+				try
+				{
+					ApiMessageContainer parsedMessage = JsonHandler.Parse<ApiMessageContainer>(e.Data);
+					if (parsedMessage.Data != null && parsedMessage.Channel != null && parsedMessage.Data is string)
+					{
+						TriggerOnMessageEvents(parsedMessage.Channel, parsedMessage.Data);
+					}
+				} catch (Exception) { }
+			};
 
-        public void TriggerOnOpenEvents()
-        {
-            foreach (var action in OnOpenEvents)
-            {
-                action();
-            }
-        }
+			Socket.Connect();
+		}
+		 
+		public void OnOpen(Action action)
+		{
+			OnOpenEvents.Add(action);
+		}
 
-        public void OnMessage(string channel, Action<string> action)
-        {
-            OnMessageEvents.Add(Tuple.Create(channel, action));
-        }
+		public void OnReady(Action action)
+		{
+			OnReadyEvents.Add(action);
+		}
 
-        public void TriggerOnMessageEvents(string channel, string data)
-        {
-            foreach (var tuple in OnMessageEvents)
-            {
-                if (tuple.Item1 == channel)
-                {
-                    tuple.Item2(data); 
-                }
-            }
-        }
-    }
+		public void TriggerOnReadyEvents()
+		{
+			foreach (var action in OnReadyEvents)
+			{
+				action();
+			}
+		}
+
+		public void TriggerOnOpenEvents()
+		{
+			foreach (var action in OnOpenEvents)
+			{
+				action();
+			}
+		}
+
+		public void OnMessage(string channel, Action<string> action)
+		{
+			OnMessageEvents.Add(Tuple.Create(channel, action));
+		}
+
+		public void TriggerOnMessageEvents(string channel, string data)
+		{
+			foreach (var tuple in OnMessageEvents)
+			{
+				if (tuple.Item1 == channel)
+				{
+					tuple.Item2(data); 
+				}
+			}
+		}
+	}
 }

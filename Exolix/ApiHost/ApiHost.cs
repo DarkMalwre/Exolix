@@ -43,10 +43,10 @@ namespace Exolix.ApiHost
 	}
 
 	public class ClusterSetupMessage
-    {
+	{
 		public string Key1 = "";
 		public string Key2 = "";
-    }
+	}
 
 	public class ApiHost
 	{
@@ -223,6 +223,7 @@ namespace Exolix.ApiHost
 			FleckLog.LogAction = (level, message, ex) => {
 				if (message == "Server started at " + ListeningAddress + " (actual port " + Settings.Port + ")")
 				{
+					ClusterReady = true;
 					TriggerOnReady();
 				}
 			};
@@ -264,11 +265,11 @@ namespace Exolix.ApiHost
 								if (channel != null && channel is string && data != null && data is string)
 								{
 									if (!ClusterReady)
-                                    {
+									{
 										ClusterSetupMessage setupMessage = JsonHandler.Parse<ClusterSetupMessage>(data);
 										// TODO: Handler cluster auth
 										return;
-                                    }
+									}
 
 									apiConnection.TriggerOnMessage(channel, data);
 									apiConnection.TriggerOnMessageGlobal(channel, data);
@@ -282,14 +283,12 @@ namespace Exolix.ApiHost
 
 			runServerLogic();
 
-			OnReady(() =>
-			{
-				ClusterReady = true;
-			});
-
 			OnOpen((connection) =>
 			{
-				connection.Send("#$server:ready", new { });
+				if (ClusterReady)
+				{
+					connection.Send("#$server:ready", new { });
+				}
 			});
 		}
 
