@@ -52,17 +52,18 @@ namespace Exolix.ApiBridge
 
         public void Run()
         {
-            ServerAddress = BuildConnectAddress();
+            ServerAddress = BuildConnectAddress(); 
             Socket = new WebSocket(ServerAddress);
 
-            Socket.OnOpen += (sender, e) =>
+            Socket.OnOpen += (sender, e) => TriggerOnOpenEvents();
+            Socket.OnMessage += (sender, e) =>
             {
-
+                TriggerOnMessageEvents("#$server:ready", e.Data);
             };
 
             Socket.Connect();
         }
-
+         
         public void OnOpen(Action action)
         {
             OnOpenEvents.Add(action);
@@ -87,7 +88,7 @@ namespace Exolix.ApiBridge
             {
                 if (tuple.Item1 == channel)
                 {
-                    tuple.Item2(data);
+                    tuple.Item2(data); 
                 }
             }
         }

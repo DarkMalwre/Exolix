@@ -42,6 +42,12 @@ namespace Exolix.ApiHost
 		public string Data = "{ \"No\": \"Value\" }";
 	}
 
+	public class ClusterSetupMessage
+    {
+		public string Key1 = "";
+		public string Key2 = "";
+    }
+
 	public class ApiHost
 	{
 		/// <summary>
@@ -55,6 +61,7 @@ namespace Exolix.ApiHost
 		private List<ApiConnection> ApiConnections = new List<ApiConnection>();
 
 		public int ConnectedClients = 0;
+		public bool ClusterReady = false;
 
 		/// <summary>
 		/// Address were server has been opened at
@@ -220,47 +227,69 @@ namespace Exolix.ApiHost
 				}
 			};
 
-			server.Start((socket) =>
+			Action runServerLogic = () =>
 			{
-				new Thread(new ThreadStart(() =>
+				server.Start((socket) =>
 				{
-					var apiConnection = new ApiConnection(socket);
-
-					socket.OnOpen = () =>
+					new Thread(new ThreadStart(() =>
 					{
-						ApiConnections.Add(apiConnection);
-						ConnectedClients = ApiConnections.Count;
-						TriggerOnOpen(apiConnection);
+						var apiConnection = new ApiConnection(socket);
 
-						CheckAliveConnections();
-					};
-
-					socket.OnClose = () =>
-					{
-						RemoveConnection(apiConnection.Identifier);
-						ConnectedClients = ApiConnections.Count;
-						apiConnection.TriggerOnClose();
-
-						CheckAliveConnections();
-					};
-
-					socket.OnMessage = (message) =>
-					{
-						try
+						socket.OnOpen = () =>
 						{
-							var parsedMessageContainer = JsonHandler.Parse<ApiMessageContainer>(message);
-							string channel = parsedMessageContainer.Channel;
-							string data = parsedMessageContainer.Data;
+							ApiConnections.Add(apiConnection);
+							ConnectedClients = ApiConnections.Count;
+							TriggerOnOpen(apiConnection);
 
-							if (channel != null && channel is string && data != null && data is string)
+							CheckAliveConnections();
+						};
+
+						socket.OnClose = () =>
+						{
+							RemoveConnection(apiConnection.Identifier);
+							ConnectedClients = ApiConnections.Count;
+							apiConnection.TriggerOnClose();
+
+							CheckAliveConnections();
+						};
+
+						socket.OnMessage = (message) =>
+						{
+							try
 							{
-								apiConnection.TriggerOnMessage(channel, data);
-								apiConnection.TriggerOnMessageGlobal(channel, data);
+								var parsedMessageContainer = JsonHandler.Parse<ApiMessageContainer>(message);
+								string channel = parsedMessageContainer.Channel;
+								string data = parsedMessageContainer.Data;
+
+								if (channel != null && channel is string && data != null && data is string)
+								{
+									if (!ClusterReady)
+                                    {
+										ClusterSetupMessage setupMessage = JsonHandler.Parse<ClusterSetupMessage>(data);
+										// TODO: Handler cluster auth
+										return;
+                                    }
+
+									apiConnection.TriggerOnMessage(channel, data);
+									apiConnection.TriggerOnMessageGlobal(channel, data);
+								}
 							}
-						}
-						catch (Exception) { }
-					};
-				})).Start();
+							catch (Exception) { }
+						};
+					})).Start();
+				});
+			};
+
+			runServerLogic();
+
+			OnReady(() =>
+			{
+				ClusterReady = true;
+			});
+
+			OnOpen((connection) =>
+			{
+				connection.Send("#$server:ready", new { });
 			});
 		}
 

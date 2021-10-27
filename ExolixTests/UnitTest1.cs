@@ -1,6 +1,7 @@
 ﻿using Exolix.ApiBridge;
 using Exolix.ApiHost;
 using Exolix.Json;
+using Exolix.Terminal;
 using System;
 
 // Create a structure for messages from a connection
@@ -17,19 +18,13 @@ public class App
 		// Create the new API server
 		ApiHost api = new ApiHost(new ApiHostSettings
 		{
-			Port = 8080 // Set the listening port to 8080
+			Port = 8090 // Set the listening port to 8080
 		});
 
 		// Listen for when the server is ready to listen for connections
 		api.OnReady(() =>
 		{
 			Console.WriteLine("The server is ready"); // Log the success message
-			ApiBridge brd =	new ApiBridge(new ApiBridgeSettings
-            {
-				Port = 8080
-            });
-
-			brd.Run();
 		});
 
 		// Listen for when the server recieves a new connection
@@ -46,5 +41,27 @@ public class App
 		});
 
 		api.Run(); // Start the server and try to listen on the listening address
-	}
+
+		ApiBridge bridge = new ApiBridge(new ApiBridgeSettings
+		{
+			Port = 8090
+		});
+
+		bridge.OnOpen(() =>
+		{
+			Logger.Info("Server connection has been opened, but it may not be fully ready for reading commands");
+		});
+
+		bridge.OnMessage("#$server:ready", (raw) =>
+		{
+			Logger.Info(raw);
+		});
+
+        //bridge.OnReady(() =>
+        //{
+
+        //});
+
+        bridge.Run();
+    }
 }
