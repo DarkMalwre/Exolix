@@ -125,9 +125,9 @@ namespace Exolix.ApiBridge
 		}
 
 		public void Send<MessageType>(string channel, MessageType message)
-        {
+		{
 			if (Socket != null && Socket.IsAlive)
-            {
+			{
 				try
 				{
 					string parsed = JsonHandler.Stringify(new
@@ -145,6 +145,6 @@ namespace Exolix.ApiBridge
 			}
 
 			throw new Exception("Socket is not connected");
-        }
+		}
 	}
 }
