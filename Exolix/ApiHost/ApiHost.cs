@@ -56,11 +56,11 @@ namespace Exolix.ApiHost
 	}
 
 	public class PeerSendCommandMessage
-    {
+	{
 		public string Channel = "";
 		public string Data = "";
 		public string ConnectionIdentifier = "";
-    }
+	}
 
 	public class ApiHost : PeerManager
 	{
@@ -209,32 +209,32 @@ namespace Exolix.ApiHost
 		}
 
 		public void Send<MessageType>(string connectionIdentifier, string channel, MessageType message)
-        {
+		{
 			ApiConnection? connection = GetConnection(connectionIdentifier);
 
 			if (connection != null)
-            {
+			{
 				connection?.Send(channel, message);
-            }
-        }
+			}
+		}
 
 		public void Send<MessageType>(string serverIdentifier, string connectionIdentifier, string channel, MessageType message)
-        {
+		{
 			ApiConnector? peer = GetPeer(serverIdentifier);
 
 			if (peer != null)
-            {
+			{
 				peer.Send("#$server:peers:command:send", new PeerSendCommandMessage
-                {
+				{
 					Channel = channel,
 					Data = JsonHandler.Stringify(message),
 					ConnectionIdentifier = connectionIdentifier
-                });
+				});
 				return;
-            }
+			}
 
 			throw new Exception("Peer node does not exist");
-        }
+		}
 
 		private void CheckAliveConnections()
 		{
@@ -278,15 +278,15 @@ namespace Exolix.ApiHost
 				{
 					PeerStatusMessage message = JsonHandler.Parse<PeerStatusMessage>(raw);
 					if (message.Success)
-                    {
+					{
 						AddWorkingPeerNode(node.ServerAddress, node);
 						TotalPeersReady++;
 
 						if (TotalPeersReady == Settings.PeerNodes.Count)
-                        {
+						{
 							doneConnecting();
-                        }
-                    }
+						}
+					}
 				});
 
 				node.Run();
