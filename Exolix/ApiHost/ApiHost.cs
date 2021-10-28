@@ -27,7 +27,7 @@ namespace Exolix.ApiHost
 		public string Key2 = "";
 		public string Host = "localhost";
 		public int? Port = null;
-	}
+	} 
 
 	public class ApiHostSettings
 	{
@@ -55,7 +55,14 @@ namespace Exolix.ApiHost
 		public bool Success = false;
 	}
 
-	public class ApiHost
+	public class PeerSendCommandMessage
+    {
+		public string Channel = "";
+		public string Data = "";
+		public string ConnectionIdentifier = "";
+    }
+
+	public class ApiHost : PeerManager
 	{
 		/// <summary>
 		/// Settings for the API endpoint server
@@ -189,7 +196,7 @@ namespace Exolix.ApiHost
 			{
 				try
 				{
-					connection?.Send<MessageType>(channel, message);
+					connection?.Send(channel, message);
 					CheckAliveConnections();
 				}
 				catch (Exception)
@@ -200,6 +207,29 @@ namespace Exolix.ApiHost
 				}
 			}
 		}
+
+		public void Send<MessageType>(string connectionIdentifier, string channel, MessageType message)
+        {
+			ApiConnection? connection = GetConnection(connectionIdentifier);
+
+			if (connection != null)
+            {
+				connection?.Send(channel, message);
+            }
+        }
+
+		public void Send<MessageType>(string serverIdentifier, string connectionIdentifier, string channel, MessageType message)
+        {
+			ApiConnector? peer = GetPeer(serverIdentifier);
+
+			if (peer != null)
+            {
+				peer.Send("#$server:peers:command:send", new PeerSendCommandMessage
+                {
+
+                });
+            }
+        }
 
 		private void CheckAliveConnections()
 		{
@@ -244,6 +274,7 @@ namespace Exolix.ApiHost
 					PeerStatusMessage message = JsonHandler.Parse<PeerStatusMessage>(raw);
 					if (message.Success)
                     {
+						AddWorkingPeerNode(node.ServerAddress, node);
 						TotalPeersReady++;
 
 						if (TotalPeersReady == Settings.PeerNodes.Count)
@@ -251,6 +282,11 @@ namespace Exolix.ApiHost
 							doneConnecting();
                         }
                     }
+				});
+
+				node.OnMessage("#$server:peers:command:send", (raw) =>
+				{
+
 				});
 
 				node.Run();
