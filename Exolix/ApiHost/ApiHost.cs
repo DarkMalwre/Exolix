@@ -372,8 +372,15 @@ namespace Exolix.ApiHost
 
 											apiConnection.OnMessage("#$server:peers:command:send", (raw) =>
 											{
-												// NOTICE: Make sure to check node has rights to command
-												Console.WriteLine(raw);
+												PeerSendCommandMessage message = JsonHandler.Parse<PeerSendCommandMessage>(raw);
+
+												if (apiConnection.HasControllRights)
+                                                {
+													Send(message.ConnectionIdentifier, message.Channel, JsonHandler.Parse<object>(message.Data));
+													return;
+                                                }
+
+												apiConnection.Close();
 											});
 
 											apiConnection.Send<PeerStatusMessage>("#$server:peers:status", new PeerStatusMessage
