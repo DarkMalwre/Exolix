@@ -226,9 +226,14 @@ namespace Exolix.ApiHost
             {
 				peer.Send("#$server:peers:command:send", new PeerSendCommandMessage
                 {
-
+					Channel = channel,
+					Data = JsonHandler.Stringify(message),
+					ConnectionIdentifier = connectionIdentifier
                 });
+				return;
             }
+
+			throw new Exception("Peer node does not exist");
         }
 
 		private void CheckAliveConnections()
@@ -282,11 +287,6 @@ namespace Exolix.ApiHost
 							doneConnecting();
                         }
                     }
-				});
-
-				node.OnMessage("#$server:peers:command:send", (raw) =>
-				{
-
 				});
 
 				node.Run();
@@ -369,6 +369,13 @@ namespace Exolix.ApiHost
 										if (setupMessage.Key1 == Settings.PeerAuth?.Key1 && setupMessage.Key2 == Settings.PeerAuth?.Key2)
 										{
 											apiConnection.HasControllRights = true;
+
+											apiConnection.OnMessage("#$server:peers:command:send", (raw) =>
+											{
+												// NOTICE: Make sure to check node has rights to command
+												Console.WriteLine(raw);
+											});
+
 											apiConnection.Send<PeerStatusMessage>("#$server:peers:status", new PeerStatusMessage
 											{
 												Success = true

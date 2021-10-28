@@ -41,6 +41,15 @@ public class App
 		api.OnReady(() =>
 		{
 			Logger.Info("The server is ready"); // Log the success message
+
+			api.OnOpen((connection) =>
+			{
+				Logger.Info("New Connection");
+				api.Send("ws://localhost:8070", connection.Identifier, "printer", new
+				{
+					Msg = "Hewwoo"
+				});
+			});
 		});
 
 		var emitPosts = () =>

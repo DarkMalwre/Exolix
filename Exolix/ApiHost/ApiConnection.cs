@@ -32,7 +32,7 @@ namespace Exolix.ApiHost
 			CheckAliveState();
 
 			try
-            {
+			{
 				var stringMessageData = JsonHandler.Stringify<MessageType>(message);
 				var fullMessageString = JsonHandler.Stringify(new
 				{
@@ -41,7 +41,8 @@ namespace Exolix.ApiHost
 				});
 
 				RealConnection.Send(fullMessageString);
-			} catch (Exception) { }
+			}
+			catch (Exception) { }
         }
 
 		public void Close()

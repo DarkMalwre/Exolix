@@ -11,7 +11,7 @@ namespace Exolix.ApiBridge
 {
 	public class ApiBridgeSettings
 	{
-		public string Host = "0.0.0.0";
+		public string Host = "localhost";
 		public int? Port = null;
 		public bool Secure = false;
 	}
@@ -74,7 +74,9 @@ namespace Exolix.ApiBridge
 					{
 						TriggerOnMessageEvents(parsedMessage.Channel, parsedMessage.Data);
 					}
-				} catch (Exception) { }
+				} catch (Exception xe) {
+					Console.Error.WriteLine(xe.ToString());
+				}
 			};
 
 			Socket.Connect();
@@ -135,7 +137,9 @@ namespace Exolix.ApiBridge
 					});
 
 					Socket.Send(parsed);
-				} catch (Exception) { }
+				} catch (Exception ex) {
+					Console.Error.WriteLine(ex.ToString());
+				}
 
 				return;
 			}
