@@ -46,46 +46,36 @@ namespace Exolix.DataBase
 			Client = new MongoClient("mongodb://localhost:27017");
 		}
 
-		public DocType[]? FetchRecords<DocType>(string database, string collection, string[,] stringFilters, QueryFetchOptions? settings = null)
+		public List<DocType>? FetchRecords<DocType>(string database, string collection, string[,] stringFilters, QueryFetchOptions? settings = null)
 		{
             var filters = new List<FilterDefinition<DocType>>();
 
 			for (int index = 0; index < stringFilters.GetLength(0); index++)
             {
-				Console.WriteLine(">: " + index);
-				Console.WriteLine(stringFilters[index, 0]);
+				filters.Add(Builders<DocType>.Filter.Eq(stringFilters[index, 0], stringFilters[index, 1]));
             }
 
-			return null;
+            var query = Client?.GetDatabase(database).GetCollection<DocType>(collection).Find(/* Builders<DocType>.Filter.And(filters) */ new BsonDocument());
 
-            foreach (var item in stringFilters)
-			{
-				if (item.Length > 0)
-				{
-					Console.WriteLine(item);
-					//filters.Add(Builders<DocType>.Filter.Eq(item[0], item[1]));
-				} else
-				{
-					// TODO: THROW ERR
-				}
-			}
+            if (settings == null)
+            {
+                settings = new QueryFetchOptions();
+            }
 
-			return null;
+            if (settings.Limit != null)
+            {
+                query?.Limit(settings.Limit);
+            }
 
-			//    var query = Client?.GetDatabase(database).GetCollection<DocType>(collection).Find(new BsonDocument(new object {}));
-
-			//    if (settings == null)
-			//    {
-			//        settings = new QueryFetchOptions();
-			//    }
-
-			//    if (settings.Limit != null)
-			//    {
-			//        query?.Limit(settings.Limit);
-			//    }
-
-			//    return null;
-			//}
-		}
+			try
+            {
+				List<DocType> result = query.ToList();
+				return result;
+			} catch (Exception ex)
+            {
+				Console.Error.WriteLine(ex);
+				return null;
+            }
+        }
 	}
 }

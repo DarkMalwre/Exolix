@@ -21,6 +21,7 @@ public class Obj
 	public int tagNumber = 0;
 	public string[] otherEmails = { };
 	public string token = "";
+	public string email = "";
 }
 
 // Application main class (Entry Point)
@@ -31,19 +32,13 @@ public class App
 		List<Tuple<string, string>> posts = new List<Tuple<string, string>>();
 
 		DataBaseApi db = new DataBaseApi();
+		db.Run();
 
 		db.FetchRecords<Obj>("Axeri", "Accounts", new string[,] {
-			{
-				"userName",
-				"RayyanKhan"
-			},
-            {
-				"displayName",
-				"XFaon"
-            }
+		})?.ForEach((doc) =>
+		{
+			Console.WriteLine(doc.displayName);
 		});
-
-		db.Run();
 
 		// Create the new API server
 		ApiHost api = new ApiHost(new ApiHostSettings
