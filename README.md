@@ -4,6 +4,10 @@ C# Real-Time Framework
 # Why
 Why Exolix? Exolix is a C# framework that allows you to develop API applications without needing too many external dependencies. Exolix keeps its consistancy to eliminate breaking changes! 
 
+# Links
+ - [Project Website](https://axeri.net/projects/exolix)
+ - [Documentation](https://axeri.net/docs/exolix)
+
 # Simple Usage Example
 This example will show how to create animations in the CLI terminal with exolix!
 
