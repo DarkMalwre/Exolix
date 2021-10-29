@@ -1,5 +1,6 @@
 ﻿using Exolix.ApiBridge;
 using Exolix.ApiHost;
+using Exolix.DataBase;
 using Exolix.Json;
 using Exolix.Terminal;
 using System;
@@ -12,6 +13,16 @@ public class MessageType
 	public string Poster = "Unknown";
 }
 
+public class Obj
+{
+	public MongoDB.Bson.ObjectId _id = new MongoDB.Bson.ObjectId();
+	public string userName = "";
+	public string displayName = "";
+	public int tagNumber = 0;
+	public string[] otherEmails = { };
+	public string token = "";
+}
+
 // Application main class (Entry Point)
 public class App
 {
@@ -19,22 +30,37 @@ public class App
 	{
 		List<Tuple<string, string>> posts = new List<Tuple<string, string>>();
 
+		DataBaseApi db = new DataBaseApi();
+
+		db.FetchRecords<Obj>("Axeri", "Accounts", new string[,] {
+			{
+				"userName",
+				"RayyanKhan"
+			},
+            {
+				"displayName",
+				"XFaon"
+            }
+		});
+
+		db.Run();
+
 		// Create the new API server
 		ApiHost api = new ApiHost(new ApiHostSettings
 		{
 			Port = 8070, // Set the listening port to 8070
 			PeerAuth = new ApiPeerAuth
-            {
+			{
 				Key1 = "peer"
-            },
+			},
 			PeerNodes = new List<ApiPeerNode>
-            {
-                new ApiPeerNode
-                {
+			{
+				new ApiPeerNode
+				{
 					Port = 8070,
 					Key1 = "peer"
-                }
-            }
+				}
+			}
 		});
 
 		// Listen for when the server is ready to listen for connections
@@ -57,9 +83,9 @@ public class App
 			api.Emit("post:clear-ui", new { });
 
 			foreach (var post in posts)
-            {
+			{
 				api.Emit("post:read", post);
-            }
+			}
 		};
 
 		// Listen for when the server recieves a new connection
@@ -79,6 +105,6 @@ public class App
 			});
 		});
 
-        api.Run(); // Start the server and try to listen on the listening address
-    }
+		api.Run(); // Start the server and try to listen on the listening address
+	}
 }
