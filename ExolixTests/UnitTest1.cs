@@ -35,6 +35,7 @@ public class App
 		db.Run();
 
 		db.FetchRecords<Obj>("Axeri", "Accounts", new string[,] {
+			{ "displayName", "XFaon" }
 		})?.ForEach((doc) =>
 		{
 			Console.WriteLine(doc.displayName);

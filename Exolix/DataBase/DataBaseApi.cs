@@ -55,7 +55,7 @@ namespace Exolix.DataBase
 				filters.Add(Builders<DocType>.Filter.Eq(stringFilters[index, 0], stringFilters[index, 1]));
             }
 
-            var query = Client?.GetDatabase(database).GetCollection<DocType>(collection).Find(/* Builders<DocType>.Filter.And(filters) */ new BsonDocument());
+            var query = Client?.GetDatabase(database).GetCollection<DocType>(collection).Find(Builders<DocType>.Filter.And(filters));
 
             if (settings == null)
             {
