@@ -9,16 +9,33 @@ using WebSocketSharp.NetCore;
 
 namespace Exolix.ApiBridge
 {
+	/// <summary>
+	/// Settings for an ApiHost connector
+	/// </summary>
 	public class ApiBridgeSettings
 	{
+		/// <summary>
+		/// Host address
+		/// </summary>
 		public string Host = "localhost";
+
+		/// <summary>
+		/// Host port
+		/// </summary>
 		public int? Port = null;
+
+		/// <summary>
+		/// Is the API secure
+		/// </summary>
 		public bool Secure = false;
 	}
 
+	/// <summary>
+	/// Connect to an Exolix API server
+	/// </summary>
 	public class ApiConnector
 	{
-		public ApiBridgeSettings Settings;
+		private ApiBridgeSettings Settings;
 		public string ServerAddress = "";
 		private WebSocket? Socket;
 		private List<Action> OnOpenEvents = new List<Action>();
