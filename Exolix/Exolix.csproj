@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <Version>0.4.1</Version>
+    <Version>0.4.2</Version>
     <Authors>Axeri</Authors>
     <PackageProjectUrl>https://github.com/AxeriDev/Exolix</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AxeriDev/Exolix</RepositoryUrl>
