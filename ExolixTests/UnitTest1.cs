@@ -33,22 +33,22 @@ public class App
 		List<Tuple<string, string>> posts = new List<Tuple<string, string>>();
 
 		DataBaseApi db = new DataBaseApi();
-		db.Run();
+        db.Run();
 
-		db.InsertRecord("Axeri", "Accounts", new BsonDocument
+        db.InsertRecord("Axeri", "Accounts", new BsonDocument
         {
-			{ "displayName", "Uwu Kitty Cattt" }
+            { "displayName", "Uwu Kitty Cattt" }
         });
 
-		db.FetchRecords<Obj>("Axeri", "Accounts", new string[,] {
-			{ "displayName", "XFaon" }
-		})?.ForEach((doc) =>
-		{
-			Console.WriteLine(doc.displayName);
-		});
+        db.FetchRecords<Obj>("Axeri", "Accounts", new string[,] {
+            { "displayName", "XFaon" }
+        })?.ForEach((doc) =>
+        {
+            Console.WriteLine(doc.displayName);
+        });
 
-		// Create the new API server
-		ApiHost api = new ApiHost(new ApiHostSettings
+        // Create the new API server
+        ApiHost api = new ApiHost(new ApiHostSettings
 		{
 			Port = 8070, // Set the listening port to 8070
 			PeerAuth = new ApiPeerAuth

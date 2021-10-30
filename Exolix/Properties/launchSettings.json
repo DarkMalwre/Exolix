@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Exolix": {
+      "commandName": "Project"
+    },
+    "Test": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\tabis\\source\\repos\\AxeriDev\\Exolix\\ExolixTests"
+    }
+  }
+}

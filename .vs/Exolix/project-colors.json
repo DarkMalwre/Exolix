@@ -1,11 +1,6 @@
 {
   "Version": 1,
   "ProjectMap": {
-    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
-      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
-      "DisplayName": "Miscellaneous Files",
-      "ColorIndex": -1
-    },
     "e53705d3-f6b2-4ad7-8d4d-1d4488c39ff3": {
       "ProjectGuid": "e53705d3-f6b2-4ad7-8d4d-1d4488c39ff3",
       "DisplayName": "Exolix",
@@ -16,11 +11,11 @@
       "DisplayName": "ExolixTests",
       "ColorIndex": 1
     },
-    "d51dbd88-d6c3-4821-8b22-e459633072f1": {
-      "ProjectGuid": "d51dbd88-d6c3-4821-8b22-e459633072f1",
-      "DisplayName": "ExolixNode",
-      "ColorIndex": 2
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
     }
   },
-  "NextColorIndex": 3
+  "NextColorIndex": 2
 }

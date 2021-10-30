@@ -22,6 +22,11 @@ namespace Exolix.DataBase
 		public string token = "";
 	}
 
+	public class DataBaseApiSettings
+    {
+		public string ConnectAddress = "mongodb://localhost:27017";
+	}
+
 	public class QueryFetchOptions
 	{
 		public int? Limit = null;
@@ -30,9 +35,18 @@ namespace Exolix.DataBase
 	public class DataBaseApi
 	{
 		public MongoClient? Client;
+		private List<Action> OnReadyEvents = new List<Action>();
+		private DataBaseApiSettings Settings;
 
-		public DataBaseApi()
+		public DataBaseApi(DataBaseApiSettings settings)
 		{
+			if (settings == null)
+            {
+				Settings = new DataBaseApiSettings();
+				return;
+            }
+
+			Settings = settings;
 		}
 
 		public void InsertRecord(string database, string collection, BsonDocument document)
@@ -42,7 +56,11 @@ namespace Exolix.DataBase
 
 		public void Run()
 		{
-			Client = new MongoClient("mongodb://localhost:27017");
+			new Thread(new ThreadStart(() =>
+			{
+				Client = new MongoClient(Settings.ConnectAddress);
+				TriggerOnReadyEvents();
+			}));
 		}
 
 		public List<DocType>? FetchRecords<DocType>(string database, string collection, string[,] stringFilters, QueryFetchOptions? settings = null)
@@ -73,6 +91,19 @@ namespace Exolix.DataBase
             {
 				Console.Error.WriteLine(ex);
 				return null;
+            }
+        }
+
+		public void OnReady(Action action)
+        {
+			OnReadyEvents.Add(action);
+        }
+
+		public void TriggerOnReadyEvents()
+        {
+			foreach (var action in OnReadyEvents)
+            {
+				action();
             }
         }
 	}

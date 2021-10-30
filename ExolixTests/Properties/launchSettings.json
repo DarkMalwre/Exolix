@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ExolixTests": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\tabis\\source\\repos\\AxeriDev\\Exolix\\ExolixTests"
+    }
+  }
+}
