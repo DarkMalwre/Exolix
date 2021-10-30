@@ -60,7 +60,7 @@ namespace Exolix.DataBase
 			{
 				Client = new MongoClient(Settings.ConnectAddress);
 				TriggerOnReadyEvents();
-			}));
+			})).Start();
 		}
 
 		public List<DocType>? FetchRecords<DocType>(string database, string collection, string[,] stringFilters, QueryFetchOptions? settings = null)
