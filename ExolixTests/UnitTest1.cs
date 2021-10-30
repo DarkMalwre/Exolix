@@ -3,6 +3,7 @@ using Exolix.ApiHost;
 using Exolix.DataBase;
 using Exolix.Json;
 using Exolix.Terminal;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +34,11 @@ public class App
 
 		DataBaseApi db = new DataBaseApi();
 		db.Run();
+
+		db.InsertRecord("Axeri", "Accounts", new BsonDocument
+        {
+			{ "displayName", "Uwu Kitty Cattt" }
+        });
 
 		db.FetchRecords<Obj>("Axeri", "Accounts", new string[,] {
 			{ "displayName", "XFaon" }

@@ -33,12 +33,11 @@ namespace Exolix.DataBase
 
 		public DataBaseApi()
 		{
-
 		}
 
-		public void InsertDocument<DocType>(string database, string collection, DocType document)
+		public void InsertRecord(string database, string collection, BsonDocument document)
 		{
-
+			Client?.GetDatabase(database).GetCollection<BsonDocument>(collection).InsertOne(document);
 		}
 
 		public void Run()
@@ -48,14 +47,14 @@ namespace Exolix.DataBase
 
 		public List<DocType>? FetchRecords<DocType>(string database, string collection, string[,] stringFilters, QueryFetchOptions? settings = null)
 		{
-            var filters = new List<FilterDefinition<DocType>>();
+            List<FilterDefinition<DocType>> filters = new List<FilterDefinition<DocType>>();
 
 			for (int index = 0; index < stringFilters.GetLength(0); index++)
             {
 				filters.Add(Builders<DocType>.Filter.Eq(stringFilters[index, 0], stringFilters[index, 1]));
             }
 
-            var query = Client?.GetDatabase(database).GetCollection<DocType>(collection).Find(Builders<DocType>.Filter.And(filters));
+            IFindFluent<DocType, DocType>? query = Client?.GetDatabase(database).GetCollection<DocType>(collection).Find(Builders<DocType>.Filter.And(filters));
 
             if (settings == null)
             {
@@ -69,8 +68,7 @@ namespace Exolix.DataBase
 
 			try
             {
-				List<DocType> result = query.ToList();
-				return result;
+				return query.ToList();
 			} catch (Exception ex)
             {
 				Console.Error.WriteLine(ex);
