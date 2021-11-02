@@ -11,15 +11,9 @@ using System.Threading.Tasks;
 
 namespace Exolix.DataBase
 {
-	public class UwuGamer
+	public class QueryUpdateOptions
 	{
-		public ObjectId _id = new ObjectId();
-		public string displayName = "XFaon";
-		public string userName = "";
-		public int tagNumber = 1;
-		public string email = "";
-		public string[] otherEmails = { "" };
-		public string token = "";
+
 	}
 
 	public class DataBaseApiSettings
@@ -93,6 +87,44 @@ namespace Exolix.DataBase
 				return null;
             }
         }
+
+		public void UpdateRecords<DocType>(string database, string collection, string[,] stringFilters, string[,] updateProps, QueryUpdateOptions? settings = null)
+		{
+			UpdateDefinition<DocType>? update = null;
+
+			var builder = Builders<DocType>.Filter;
+			var filter = builder.Empty;
+
+			for (int index = 0; index < stringFilters.GetLength(0); index++)
+			{
+				filter &= builder.Eq(stringFilters[index, 0], stringFilters[index, 1]);
+			}
+
+			for (int index = 0; index < updateProps.GetLength(0); index++)
+			{
+				if (index == 0)
+				{
+					update = Builders<DocType>.Update.Set(stringFilters[index, 0], stringFilters[index, 1]);
+				}
+				else if (update != null)
+				{
+					update.Set(stringFilters[index, 0], stringFilters[index, 1]);
+				}
+			}
+
+			if (settings == null)
+			{
+				settings = new QueryUpdateOptions();
+			}
+
+			//if (settings.Limit != null)
+			//{
+			//	query?.Limit(settings.Limit);
+			//}
+
+			IMongoCollection<DocType>? queryCollection = Client?.GetDatabase(database).GetCollection<DocType>(collection);
+			queryCollection?.UpdateOne(filter, update);
+		}
 
 		public void OnReady(Action action)
         {
