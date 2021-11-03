@@ -1,6 +1,4 @@
-﻿using InfluxDB.Client;
-using InfluxDB.Client.Api.Domain;
-using InfluxDB.Client.Writes;
+﻿using Exolix.Developer;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -90,7 +88,7 @@ namespace Exolix.DataBase
 
 		public void UpdateRecords<DocType>(string database, string collection, string[,] stringFilters, string[,] updateProps, QueryUpdateOptions? settings = null)
 		{
-			UpdateDefinition<DocType>? update = null;
+			List<UpdateDefinition<DocType>> updatesList = new();
 
 			var builder = Builders<DocType>.Filter;
 			var filter = builder.Empty;
@@ -102,15 +100,21 @@ namespace Exolix.DataBase
 
 			for (int index = 0; index < updateProps.GetLength(0); index++)
 			{
-				if (index == 0)
-				{
-					update = Builders<DocType>.Update.Set(stringFilters[index, 0], stringFilters[index, 1]);
-				}
-				else if (update != null)
-				{
-					update.Set(stringFilters[index, 0], stringFilters[index, 1]);
-				}
+				//if (index == 0)
+				//{
+				//	Console.WriteLine("Create");
+				//	update = Builders<BsonDocument>.Update.Set(stringFilters[index, 0], stringFilters[index, 1]);
+				//	update.Dump();
+				//}
+
+				//if (update != null)
+				//{
+				//	update.Set(stringFilters[index, 0], stringFilters[index, 1]);
+				//}
+				updatesList.Add(Builders<DocType>.Update.Set(stringFilters[index, 0], stringFilters[index, 1]));
 			}
+
+			var update = Builders<DocType>.Update.Combine(updatesList);
 
 			if (settings == null)
 			{
@@ -123,7 +127,7 @@ namespace Exolix.DataBase
 			//}
 
 			IMongoCollection<DocType>? queryCollection = Client?.GetDatabase(database).GetCollection<DocType>(collection);
-			queryCollection?.UpdateOne(filter, update);
+			var updateResult = queryCollection?.UpdateMany(filter, /* update */ Builders<DocType>.Update.Set(t => t.GetType()!.GetProperty("Name")!.GetValue(t, null), "New"));
 		}
 
 		public void OnReady(Action action)
