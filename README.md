@@ -18,7 +18,7 @@ class MainFile
 {
 	public static void Main(string[] args)
 	{
-		logger.info("Hello, Exolix!");
+		logger.Info("Hello, Exolix!");
 		// configure Exolix API host server settings
         	ApiHost server = new ApiHost(new ApiHostSettings { 
             		Port = 4040
