@@ -25,32 +25,32 @@ public class App
 {
 	public static void Main(string[] args)
 	{
-		DataBaseApi api = new DataBaseApi(new DataBaseApiSettings
-		{
+		//DataBaseApi api = new DataBaseApi(new DataBaseApiSettings
+		//{
 
-		});
+		//});
 
-		api.OnReady(() =>
-		{
-			Logger.Info("Connected to database localy");
+		//api.OnReady(() =>
+		//{
+		//	Logger.Info("Connected to database localy");
 
-			api.FetchRecords<Obj>("Axeri", "Tes", new string[,]
-			{
-				{ "Name", "OldName" }
-			})?.ForEach((e) =>
-			{
-				Console.WriteLine(e.Name);
-			});
+		//	api.FetchRecords<Obj>("Axeri", "Tes", new string[,]
+		//	{
+		//		{ "Name", "OldName" }
+		//	})?.ForEach((e) =>
+		//	{
+		//		Console.WriteLine(e.Name);
+		//	});
 
-			api.UpdateRecords<Obj>("Axeri", "Tes", new string[,]
-			{
-				{ "Name", "OldName" }
-			}, new string[,]
-			{
-				{ "Name", "XFaonUpdated" }
-			});
-		});
+		//	api.UpdateRecords<Obj>("Axeri", "Tes", new string[,]
+		//	{
+		//		{ "Name", "OldName" }
+		//	}, new string[,]
+		//	{
+		//		{ "Name", "XFaonUpdated" }
+		//	});
+		//});
 
-		api.Run();
+		//api.Run();
 	}
 }

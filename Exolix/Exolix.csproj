@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <Version>0.4.2</Version>
+    <Version>0.4.3</Version>
     <Authors>Axeri</Authors>
     <PackageProjectUrl>https://axeri.net/projects/exolix</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AxeriDev/Exolix</RepositoryUrl>
@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <PackageReference Include="Fleck" Version="1.2.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Pastel" Version="2.1.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
